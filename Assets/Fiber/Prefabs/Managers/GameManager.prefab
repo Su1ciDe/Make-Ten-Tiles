@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabsSO: {fileID: 11400000, guid: a3e42439a4d88457a96aa36556b8ff58, type: 2}
+  colorsSO: {fileID: 11400000, guid: 6647a1afc7efd4d57926a9286c56d56c, type: 2}
 --- !u!114 &1554739255217567303
 MonoBehaviour:
   m_ObjectHideFlags: 0

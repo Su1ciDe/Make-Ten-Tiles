@@ -12,7 +12,6 @@ namespace GridSystem
 	[DeclareFoldoutGroup("Properties")]
 	public class GridManager : Singleton<GridManager>
 	{
-		[Title("Properties")]
 		[SerializeField, ReadOnly, Group("Properties")] private GridCell3D gridCells;
 		public GridCell3D GridCells => gridCells;
 
@@ -30,6 +29,11 @@ namespace GridSystem
 		[SerializeField, HideInInspector] private List<Vector2Int> sizes = new List<Vector2Int>();
 
 		private const int BLAST_COUNT = 3;
+
+		private void Awake()
+		{
+			SetupTileBlockers();
+		}
 
 		#region Helpers
 
@@ -100,9 +104,10 @@ namespace GridSystem
 						var gridCell = grid[i].GetCell(x, y);
 
 						var cell = (GridCell)PrefabUtility.InstantiatePrefab(GameManager.Instance.PrefabsSO.GridCellPrefab, layer.transform);
-						cell.Setup(i, x, y, gridCell);
+						cell.transform.localPosition = new Vector3(x * (nodeSize.x + xSpacing) - xOffset, -y * (nodeSize.y + ySpacing) + yOffset);
+						cell.transform.localRotation = transform.rotation;
 						cell.gameObject.name = x + " - " + y;
-						cell.transform.localPosition = new Vector3(x * (nodeSize.x + xSpacing) - xOffset, 0, -y * (nodeSize.y + ySpacing) + yOffset);
+						cell.Setup(i, x, y, gridCell);
 						gridCells[i, x, y] = cell;
 					}
 				}
@@ -170,6 +175,28 @@ namespace GridSystem
 		private void CleanGrid()
 		{
 			cellHolder.DestroyImmediateChildren();
+		}
+
+		private void OnValidate()
+		{
+			if (gridCells != null)
+			{
+				for (int i = 0; i < gridCells.GetLength(0); i++)
+				{
+					var cells = gridCells[i];
+					for (int x = 0; x < cells.GetLength(0); x++)
+					{
+						for (int y = 0; y < cells.GetLength(1); y++)
+						{
+							var gridCell = GetCell(i, x, y);
+							if (!gridCell) return;
+							if (gridCell.CurrentTile is null) continue;
+
+							SceneVisibilityManager.instance.DisablePicking(gridCell.CurrentTile.gameObject, true);
+						}
+					}
+				}
+			}
 		}
 #endif
 

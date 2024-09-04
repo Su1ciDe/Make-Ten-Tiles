@@ -4,293 +4,286 @@ using System.Text.RegularExpressions;
 
 namespace Array2DEditor
 {
-    public abstract class Array2DDrawer : PropertyDrawer
-    {
-        private static float LineHeight => EditorGUIUtility.singleLineHeight;
-        
-        private const float firstLineMargin = 5f;
-        private const float lastLineMargin = 2f;
+	public abstract class Array2DDrawer : PropertyDrawer
+	{
+		private static float LineHeight => EditorGUIUtility.singleLineHeight;
 
-        private static readonly Vector2 cellSpacing = new Vector2(5f, 5f);
+		private const float firstLineMargin = 5f;
+		private const float lastLineMargin = 2f;
 
-        private SerializedProperty thisProperty;
-        private SerializedProperty gridSizeProperty;
-        private SerializedProperty cellSizeProperty;
-        private SerializedProperty cellsProperty;
+		private static readonly Vector2 cellSpacing = new Vector2(5f, 5f);
 
-        #region SerializedProperty getters
+		private SerializedProperty thisProperty;
+		private SerializedProperty gridSizeProperty;
+		private SerializedProperty cellSizeProperty;
+		private SerializedProperty cellsProperty;
 
-        private void GetGridSizeProperty(SerializedProperty property) =>
-            TryFindPropertyRelative(property, "gridSize", out gridSizeProperty);
+		#region SerializedProperty getters
 
-        private void GetCellSizeProperty(SerializedProperty property) =>
-            TryFindPropertyRelative(property, "cellSize", out cellSizeProperty);
+		private void GetGridSizeProperty(SerializedProperty property) => TryFindPropertyRelative(property, "gridSize", out gridSizeProperty);
 
-        private void GetCellsProperty(SerializedProperty property) =>
-            TryFindPropertyRelative(property, "cells", out cellsProperty);
+		private void GetCellSizeProperty(SerializedProperty property) => TryFindPropertyRelative(property, "cellSize", out cellSizeProperty);
 
-        #endregion
+		private void GetCellsProperty(SerializedProperty property) => TryFindPropertyRelative(property, "cells", out cellsProperty);
 
-        #region Texts
-        
-        static class Texts
-        {
-            public static readonly GUIContent reset = new GUIContent("Reset");
-            public static readonly GUIContent changeGridSize = new GUIContent("Change Grid Size");
-            public static readonly GUIContent changeCellSize = new GUIContent("Change Cell Size");
+		#endregion
 
-            public const string gridSizeLabel = "Grid Size";
-            public const string cellSizeLabel = "Cell Size";
-        }
-        
-        #endregion
+		#region Texts
 
-        #region Abstract and virtual methods
+		private static class Texts
+		{
+			public static readonly GUIContent reset = new GUIContent("Reset");
+			public static readonly GUIContent changeGridSize = new GUIContent("Change Grid Size");
+			public static readonly GUIContent changeCellSize = new GUIContent("Change Cell Size");
 
-        protected virtual Vector2Int GetDefaultCellSizeValue() => new Vector2Int(32, 16);
-        
-        protected abstract object GetDefaultCellValue();
-        protected abstract object GetCellValue(SerializedProperty cell);
-        protected abstract void SetValue(SerializedProperty cell, object obj);
-        
-        #endregion
+			public const string gridSizeLabel = "Grid Size";
+			public const string cellSizeLabel = "Cell Size";
+		}
 
+		#endregion
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            thisProperty = property;
+		#region Abstract and virtual methods
 
-            // Initialize properties
-            GetGridSizeProperty(property);
-            GetCellSizeProperty(property);
-            GetCellsProperty(property);
+		protected virtual Vector2Int GetDefaultCellSizeValue() => new Vector2Int(32, 16);
 
-            // Don't draw anything if we miss a property
-            if (gridSizeProperty == null || cellSizeProperty == null || cellsProperty == null)
-            {
-                return;
-            }
-            
-            // Initialize cell size to default value if not already done
-            if (cellSizeProperty.vector2IntValue == default)
-            {
-                cellSizeProperty.vector2IntValue = GetDefaultCellSizeValue();
-            }
+		protected abstract object GetDefaultCellValue();
+		protected abstract object GetCellValue(SerializedProperty cell);
+		protected abstract void SetValue(SerializedProperty cell, object obj);
 
-            position = EditorGUI.IndentedRect(position);
+		#endregion
 
-            // Begin property drawing
-            EditorGUI.BeginProperty(position, label, property);
+		public override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
+		{
+			thisProperty = property;
 
-            // Display foldout
-            var foldoutRect = new Rect(position)
-            {
-                height = LineHeight
-            };
+			// Initialize properties
+			GetGridSizeProperty(property);
+			GetCellSizeProperty(property);
+			GetCellsProperty(property);
 
-            // We're using EditorGUI.IndentedRect to draw our Rects, and it already takes the indentLevel into account, so we must set it to 0.
-            // This allows the PropertyDrawer to handle nested variables correctly.
-            // More info: https://answers.unity.com/questions/1268850/how-to-properly-deal-with-editorguiindentlevel-in.html
-            EditorGUI.indentLevel = 0;
+			// Don't draw anything if we miss a property
+			if (gridSizeProperty == null || cellSizeProperty == null || cellsProperty == null)
+			{
+				return;
+			}
 
-            label.tooltip = $"Size: {gridSizeProperty.vector2IntValue.x}x{gridSizeProperty.vector2IntValue.y}";
+			// Initialize cell size to default value if not already done
+			if (cellSizeProperty.vector2IntValue == default)
+			{
+				cellSizeProperty.vector2IntValue = GetDefaultCellSizeValue();
+			}
 
-            property.isExpanded = EditorGUI.BeginFoldoutHeaderGroup(foldoutRect, property.isExpanded, label,
-                menuAction: ShowHeaderContextMenu);
-            EditorGUI.EndFoldoutHeaderGroup();
+			rect = EditorGUI.IndentedRect(rect);
 
-            // Go to next line
-            position.y += LineHeight;
+			// Begin property drawing
+			EditorGUI.BeginProperty(rect, label, property);
 
-            if (property.isExpanded)
-            {
-                position.y += firstLineMargin;
+			// Display foldout
+			var foldoutRect = new Rect(rect) { height = LineHeight };
 
-                DisplayGrid(position);
-            }
+			// We're using EditorGUI.IndentedRect to draw our Rects, and it already takes the indentLevel into account, so we must set it to 0.
+			// This allows the PropertyDrawer to handle nested variables correctly.
+			// More info: https://answers.unity.com/questions/1268850/how-to-properly-deal-with-editorguiindentlevel-in.html
+			EditorGUI.indentLevel = 0;
 
-            EditorGUI.EndProperty();
-        }
+			// label.tooltip = $"Size: {gridSizeProperty.vector2IntValue.x}x{gridSizeProperty.vector2IntValue.y}";
 
-        private void ShowHeaderContextMenu(Rect position)
-        {
-            var menu = new GenericMenu();
-            menu.AddItem(Texts.reset, false, OnReset);
-            menu.AddSeparator(""); // An empty string will create a separator at the top level
-            menu.AddItem(Texts.changeGridSize, false, OnChangeGridSize);
-            menu.AddItem(Texts.changeCellSize, false, OnChangeCellSize);
-            menu.DropDown(position);
-        }
+			property.isExpanded = EditorGUI.BeginFoldoutHeaderGroup(foldoutRect, property.isExpanded, "Layer", menuAction: ShowHeaderContextMenu);
 
-        private void OnReset()
-        {
-            InitNewGrid(gridSizeProperty.vector2IntValue);
-        }
+			EditorGUI.EndFoldoutHeaderGroup();
 
-        private void OnChangeGridSize()
-        {
-            EditorWindowVector2IntField.ShowWindow(gridSizeProperty.vector2IntValue, InitNewGridAndRestorePreviousValues, Texts.gridSizeLabel);
-        }
-        
-        private void OnChangeCellSize()
-        {
-            EditorWindowVector2IntField.ShowWindow(cellSizeProperty.vector2IntValue, SetNewCellSize, Texts.cellSizeLabel);
-        }
+			// Go to the next line
+			rect.y += LineHeight;
+			if (property.isExpanded)
+			{
+				rect.y += firstLineMargin;
 
-        private void SetNewCellSize(Vector2Int newCellSize)
-        {
-            cellSizeProperty.vector2IntValue = newCellSize;
-            thisProperty.serializedObject.ApplyModifiedProperties();
-        }
+				// Display the grid size field and change it
+				var newSize = EditorGUI.Vector2IntField(rect, "Grid Size: ", gridSizeProperty.vector2IntValue);
+				if (!newSize.Equals(gridSizeProperty.vector2IntValue))
+					InitNewGridAndRestorePreviousValues(newSize);
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            var height = base.GetPropertyHeight(property, label);
+				rect.y += LineHeight;
+				rect.y += firstLineMargin;
 
-            GetGridSizeProperty(property);
-            GetCellSizeProperty(property);
+				DisplayGrid(rect);
+			}
 
-            if (property.isExpanded)
-            {
-                height += firstLineMargin;
+			EditorGUI.EndProperty();
+		}
 
-                height += gridSizeProperty.vector2IntValue.y * (cellSizeProperty.vector2IntValue.y + cellSpacing.y) - cellSpacing.y; // Cells lines
-                
-                height += lastLineMargin;
-            }
+		private void ShowHeaderContextMenu(Rect position)
+		{
+			var menu = new GenericMenu();
+			menu.AddItem(Texts.reset, false, OnReset);
+			menu.AddSeparator(""); // An empty string will create a separator at the top level
+			menu.AddItem(Texts.changeGridSize, false, OnChangeGridSize);
+			menu.AddItem(Texts.changeCellSize, false, OnChangeCellSize);
+			menu.DropDown(position);
+		}
 
-            return height;
-        }
+		private void OnReset()
+		{
+			InitNewGrid(gridSizeProperty.vector2IntValue);
+		}
 
-        private void InitNewGridAndRestorePreviousValues(Vector2Int newSize)
-        {
-            var previousGrid = GetGridValues();
-            var previousGridSize = gridSizeProperty.vector2IntValue;
-            
-            InitNewGrid(newSize);
+		private void OnChangeGridSize()
+		{
+			EditorWindowVector2IntField.ShowWindow(gridSizeProperty.vector2IntValue, InitNewGridAndRestorePreviousValues, Texts.gridSizeLabel);
+		}
 
-            for (var y = 0; y < newSize.y; y++)
-            {
-                var row = GetRowAt(y);
-                
-                for (var x = 0; x < newSize.x; x++)
-                {
-                    var cell = row.GetArrayElementAtIndex(x);
-                    
-                    if (x < previousGridSize.x && y < previousGridSize.y)
-                    {
-                        SetValue(cell, previousGrid[y][x]);
-                    }
-                }
-            }
-            
-            thisProperty.serializedObject.ApplyModifiedProperties();
-        }
+		private void OnChangeCellSize()
+		{
+			EditorWindowVector2IntField.ShowWindow(cellSizeProperty.vector2IntValue, SetNewCellSize, Texts.cellSizeLabel);
+		}
 
-        private void InitNewGrid(Vector2Int newSize)
-        {
-            cellsProperty.ClearArray();
+		private void SetNewCellSize(Vector2Int newCellSize)
+		{
+			cellSizeProperty.vector2IntValue = newCellSize;
+			thisProperty.serializedObject.ApplyModifiedProperties();
+		}
 
-            for (var y = 0; y < newSize.y; y++)
-            {
-                cellsProperty.InsertArrayElementAtIndex(y); // Insert a new row
-                var row = GetRowAt(y); // Get the new row
-                row.ClearArray(); // Clear it
+		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+		{
+			var height = base.GetPropertyHeight(property, label);
 
-                for (var x = 0; x < newSize.x; x++)
-                {
-                    row.InsertArrayElementAtIndex(x);
+			GetGridSizeProperty(property);
+			GetCellSizeProperty(property);
 
-                    var cell = row.GetArrayElementAtIndex(x);
+			if (property.isExpanded)
+			{
+				height += firstLineMargin;
+				height += LineHeight * 2;
+				height += gridSizeProperty.vector2IntValue.y * (cellSizeProperty.vector2IntValue.y + cellSpacing.y) - cellSpacing.y; // Cells line
+				height += lastLineMargin;
+			}
 
-                    SetValue(cell, GetDefaultCellValue());
-                }
-            }
+			return height;
+		}
 
-            gridSizeProperty.vector2IntValue = newSize;
-            thisProperty.serializedObject.ApplyModifiedProperties();
-        }
+		private void InitNewGridAndRestorePreviousValues(Vector2Int newSize)
+		{
+			var previousGrid = GetGridValues();
+			var previousGridSize = gridSizeProperty.vector2IntValue;
 
-        private object[][] GetGridValues()
-        {
-            var arr = new object[gridSizeProperty.vector2IntValue.y][];
-            
-            for (var y = 0; y < gridSizeProperty.vector2IntValue.y; y++)
-            {
-                arr[y] = new object[gridSizeProperty.vector2IntValue.x];
-                
-                for (var x = 0; x < gridSizeProperty.vector2IntValue.x; x++)
-                {
-                    arr[y][x] = GetCellValue(GetRowAt(y).GetArrayElementAtIndex(x));
-                }
-            }
+			InitNewGrid(newSize);
 
-            return arr;
-        }
+			for (var y = 0; y < newSize.y; y++)
+			{
+				var row = GetRowAt(y);
 
-        private void DisplayGrid(Rect position)
-        {
-            var cellRect = new Rect(position.x, position.y, cellSizeProperty.vector2IntValue.x,
-                cellSizeProperty.vector2IntValue.y);
+				for (var x = 0; x < newSize.x; x++)
+				{
+					var cell = row.GetArrayElementAtIndex(x);
 
-            for (var y = 0; y < gridSizeProperty.vector2IntValue.y; y++)
-            {
-                for (var x = 0; x < gridSizeProperty.vector2IntValue.x; x++)
-                {
-                    var pos = new Rect(cellRect)
-                    {
-                        x = cellRect.x + (cellRect.width + cellSpacing.x) * x,
-                        y = cellRect.y + (cellRect.height + cellSpacing.y) * y
-                    };
+					if (x < previousGridSize.x && y < previousGridSize.y)
+					{
+						SetValue(cell, previousGrid[y][x]);
+					}
+				}
+			}
 
-                    var property = GetRowAt(y).GetArrayElementAtIndex(x);
+			thisProperty.serializedObject.ApplyModifiedProperties();
+		}
 
-                    if (property.propertyType == SerializedPropertyType.ObjectReference)
-                    {
-                        var match = Regex.Match(property.type, @"PPtr<\$(.+)>");
-                        if (match.Success)
-                        {
-                            var objectType = match.Groups[1].ToString();
-                            var assemblyName = "UnityEngine";
-                            EditorGUI.ObjectField(pos, property, System.Type.GetType($"{assemblyName}.{objectType}, {assemblyName}"), GUIContent.none);
-                        }
-                    }
-                    else
-                        EditorGUI.PropertyField(pos, property, GUIContent.none);
-                }
-            }
-        }
-        
-        private SerializedProperty GetRowAt(int idx)
-        {
-            return cellsProperty.GetArrayElementAtIndex(idx).FindPropertyRelative("row");
-        }
-        
-        private void TryFindPropertyRelative(SerializedProperty parent, string relativePropertyPath, out SerializedProperty prop)
-        {
-            prop = parent.FindPropertyRelative(relativePropertyPath);
+		private void InitNewGrid(Vector2Int newSize)
+		{
+			cellsProperty.ClearArray();
 
-            if (prop == null)
-            {
-                Debug.LogError($"Couldn't find variable \"{relativePropertyPath}\" in {parent.name}");
-            }
-        }
-        
-        #region Debug
+			for (var y = 0; y < newSize.y; y++)
+			{
+				cellsProperty.InsertArrayElementAtIndex(y); // Insert a new row
+				var row = GetRowAt(y); // Get the new row
+				row.ClearArray(); // Clear it
 
-        private void DrawDebugRect(Rect rect) => DrawDebugRect(rect, new Color(1f, 0f, 1f, .2f));
+				for (var x = 0; x < newSize.x; x++)
+				{
+					row.InsertArrayElementAtIndex(x);
 
-        private void DrawDebugRect(Rect rect, Color color)
-        {
-            var texture = new Texture2D(1, 1);
-            texture.SetPixel(0, 0, color);
-            texture.Apply();
-            var prevBoxTex = GUI.skin.box.normal.background;
-            GUI.skin.box.normal.background = texture;
-            GUI.Box(rect, GUIContent.none);
-            GUI.skin.box.normal.background = prevBoxTex;
-        }
+					var cell = row.GetArrayElementAtIndex(x);
 
-        #endregion
-    }
+					SetValue(cell, GetDefaultCellValue());
+				}
+			}
+
+			gridSizeProperty.vector2IntValue = newSize;
+			thisProperty.serializedObject.ApplyModifiedProperties();
+		}
+
+		private object[][] GetGridValues()
+		{
+			var arr = new object[gridSizeProperty.vector2IntValue.y][];
+
+			for (var y = 0; y < gridSizeProperty.vector2IntValue.y; y++)
+			{
+				arr[y] = new object[gridSizeProperty.vector2IntValue.x];
+
+				for (var x = 0; x < gridSizeProperty.vector2IntValue.x; x++)
+				{
+					arr[y][x] = GetCellValue(GetRowAt(y).GetArrayElementAtIndex(x));
+				}
+			}
+
+			return arr;
+		}
+
+		private void DisplayGrid(Rect position)
+		{
+			var cellRect = new Rect(position.x, position.y, cellSizeProperty.vector2IntValue.x, cellSizeProperty.vector2IntValue.y);
+
+			for (var y = 0; y < gridSizeProperty.vector2IntValue.y; y++)
+			{
+				for (var x = 0; x < gridSizeProperty.vector2IntValue.x; x++)
+				{
+					var pos = new Rect(cellRect) { x = cellRect.x + (cellRect.width + cellSpacing.x) * x, y = cellRect.y + (cellRect.height + cellSpacing.y) * y };
+					var property = GetRowAt(y).GetArrayElementAtIndex(x);
+
+					if (property.propertyType == SerializedPropertyType.ObjectReference)
+					{
+						var match = Regex.Match(property.type, @"PPtr<\$(.+)>");
+						if (match.Success)
+						{
+							var objectType = match.Groups[1].ToString();
+							var assemblyName = "UnityEngine";
+							EditorGUI.ObjectField(pos, property, System.Type.GetType($"{assemblyName}.{objectType}, {assemblyName}"), GUIContent.none);
+						}
+					}
+					else
+						EditorGUI.PropertyField(pos, property, GUIContent.none);
+				}
+			}
+		}
+
+		private SerializedProperty GetRowAt(int idx)
+		{
+			return cellsProperty.GetArrayElementAtIndex(idx).FindPropertyRelative("row");
+		}
+
+		private static void TryFindPropertyRelative(SerializedProperty parent, string relativePropertyPath, out SerializedProperty prop)
+		{
+			prop = parent.FindPropertyRelative(relativePropertyPath);
+
+			if (prop == null)
+			{
+				Debug.LogError($"Couldn't find variable \"{relativePropertyPath}\" in {parent.name}");
+			}
+		}
+
+		#region Debug
+
+		private void DrawDebugRect(Rect rect) => DrawDebugRect(rect, new Color(1f, 0f, 1f, .2f));
+
+		private void DrawDebugRect(Rect rect, Color color)
+		{
+			var texture = new Texture2D(1, 1);
+			texture.SetPixel(0, 0, color);
+			texture.Apply();
+			var prevBoxTex = GUI.skin.box.normal.background;
+			GUI.skin.box.normal.background = texture;
+			GUI.Box(rect, GUIContent.none);
+			GUI.skin.box.normal.background = prevBoxTex;
+		}
+
+		#endregion
+	}
 }

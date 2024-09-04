@@ -1,13 +1,15 @@
 using Fiber.Managers;
-using UnityEngine;
+using Fiber.Utilities;
 
 namespace GamePlay.Player
 {
 	/// <summary>
 	/// /// Handle Player Specific Information Assigning,  ...
 	/// </summary>
-	public class Player : MonoBehaviour
+	public class Player : Singleton<Player>
 	{
+		public bool CanInput { get; set; }
+
 		private void OnEnable()
 		{
 			LevelManager.OnLevelLoad += OnLevelLoaded;
@@ -33,13 +35,13 @@ namespace GamePlay.Player
 		// OnStart is called when click "tap to play button"
 		private void OnStart()
 		{
-			// TODO  
+			CanInput = true;
 		}
 
-		// OnWin is called when game is completed as succeed
+		// OnWin is called when the game is completed as succeed
 		private void OnWin()
 		{
-			// TODO
+			CanInput = false;
 		}
 
 		private void OnLevelWinWithMoveCount(int moveCount)
@@ -47,10 +49,10 @@ namespace GamePlay.Player
 			OnWin();
 		}
 
-		// OnLose is called when game is completed as failed
+		// OnLose is called when the game is completed as failed
 		private void OnLose()
 		{
-			// TODO
+			CanInput = false;
 		}
 	}
 }

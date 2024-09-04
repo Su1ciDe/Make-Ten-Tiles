@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GridCellPrefab: {fileID: 4862998968771629421, guid: 3c5bfd517edf84a15b55de74e4fcd7b8, type: 3}
   TilePrefab: {fileID: 1665572431509453263, guid: c26f33ec64d6944baa538d4988a2bc1a, type: 3}
+  HolderSlotPrefab: {fileID: 2748603582322469333, guid: ad833d25569b44a52b9debcabed8cec2, type: 3}
+  HolderGroupPrefab: {fileID: 1211373856053150403, guid: 03a6c5cd39e13421287a97d69cf22d12, type: 3}

@@ -27,17 +27,18 @@ namespace GridSystem
 
 			if (cellType != CellType.Empty)
 			{
-				var tile = (Tile)PrefabUtility.InstantiatePrefab(GameManager.Instance.PrefabsSO.TilePrefab);
-				tile.transform.SetParent(tileHolder);
+				var tile = (Tile)PrefabUtility.InstantiatePrefab(GameManager.Instance.PrefabsSO.TilePrefab, tileHolder);
 				tile.transform.localPosition = Vector3.zero;
 				tile.Setup(cellType, this);
+
+				SceneVisibilityManager.instance.DisablePicking(tile.gameObject, true);
 			}
 		}
 
 		private void OnDrawGizmos()
 		{
 			Gizmos.color = Color.yellow;
-			Gizmos.DrawWireCube(transform.position, new Vector3(1, 0, 1));
+			Gizmos.DrawWireCube(transform.position, new Vector3(1, 1));
 		}
 #endif
 

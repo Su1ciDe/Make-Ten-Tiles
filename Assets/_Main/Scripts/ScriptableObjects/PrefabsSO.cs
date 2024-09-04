@@ -1,6 +1,7 @@
 using Fiber.Utilities;
 using GridSystem;
 using GridSystem.Tiles;
+using HolderSystem;
 using UnityEngine;
 
 namespace ScriptableObjects
@@ -10,5 +11,9 @@ namespace ScriptableObjects
 	{
 		public GridCell GridCellPrefab;
 		public Tile TilePrefab;
+
+		[Space]
+		public HolderSlot HolderSlotPrefab;
+		public HolderGroup HolderGroupPrefab;
 	}
 }

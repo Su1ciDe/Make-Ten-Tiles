@@ -57,7 +57,7 @@ public class EditorWindowVector2IntField : EditorWindow
 
         // We're doing this in OnGUI() since the Update() function doesn't seem to get called when we show the window with ShowModalUtility().
         var ev = Event.current;
-        if (ev.type == EventType.KeyDown || ev.type == EventType.KeyUp)
+        if (ev.type is EventType.KeyDown or EventType.KeyUp)
         {
             switch (ev.keyCode)
             {
