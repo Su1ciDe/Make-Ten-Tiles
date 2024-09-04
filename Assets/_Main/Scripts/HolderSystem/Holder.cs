@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Fiber.Managers;
 using Fiber.Utilities;
 using GridSystem.Tiles;
@@ -11,9 +12,9 @@ namespace HolderSystem
 	{
 		[SerializeField] private int slotCount = 7;
 
-		private List<HolderGroup> holderGroups = new List<HolderGroup>();
-		private List<HolderSlot> holderSlots = new List<HolderSlot>();
-		private Queue<HolderGroup> holderGroupPool = new Queue<HolderGroup>();
+		private readonly List<HolderGroup> holderGroups = new List<HolderGroup>();
+		private readonly List<HolderSlot> holderSlots = new List<HolderSlot>();
+		private readonly Queue<HolderGroup> holderGroupPool = new Queue<HolderGroup>();
 
 		private readonly WaitForSeconds waitBlast = new WaitForSeconds(Tile.BLAST_DURATION);
 
@@ -25,13 +26,11 @@ namespace HolderSystem
 		private void OnEnable()
 		{
 			Tile.OnTappedToTile += AddTileToDeck;
-			HolderGroup.OnBlast += OnBlast;
 		}
 
 		private void OnDisable()
 		{
 			Tile.OnTappedToTile -= AddTileToDeck;
-			HolderGroup.OnBlast -= OnBlast;
 		}
 
 		private void Setup()
@@ -64,24 +63,34 @@ namespace HolderSystem
 
 				newGroup.gameObject.SetActive(true);
 				var tileCount = GetTotalTileCount();
-				Debug.Log(tileCount);
 				newGroup.Setup(holderSlots[tileCount]);
 				newGroup.AddTile(tile);
 				holderGroups.Add(newGroup);
 
+				//TODO: wait for blast
 				// Check if the holder is full and lose the game
 				if (GetTotalTileCount().Equals(slotCount))
 				{
 					LevelManager.Instance.Lose();
 				}
 			}
-
-			RearrangeGroups();
 		}
 
 		private void TenBlast(Tile tile, HolderGroup tenGroup)
 		{
-			tile.Jump(tenGroup.transform.position + 1 * Vector3.up);
+			var tileInDeck = tenGroup.Tiles[0];
+			tile.transform.SetParent(tenGroup.transform);
+			tile.Jump(1 * Vector3.up).OnComplete(() =>
+			{
+				tileInDeck.Blast();
+				tile.Blast().OnComplete(() =>
+				{
+					holderGroups.Remove(tenGroup);
+					holderGroupPool.Enqueue(tenGroup);
+					tenGroup.gameObject.SetActive(false);
+					RearrangeGroups();
+				});
+			});
 		}
 
 		public void RearrangeGroups()

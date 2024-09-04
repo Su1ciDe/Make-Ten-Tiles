@@ -29,6 +29,7 @@ namespace GridSystem.Tiles
 		public static float BLAST_DURATION = .35F;
 		private const float HIGHLIGHT_DURATION = .15F;
 		private const float JUMP_POWER = 5;
+		public static float TILE_HEIGHT = .5F;
 
 		public static event UnityAction<Tile> OnTappedToTile;
 		public event UnityAction<Tile> OnTileRemoved;
@@ -49,12 +50,12 @@ namespace GridSystem.Tiles
 			return transform.DOLocalJump(pos, transform.position.y / 2f + JUMP_POWER, 1, JUMP_DURATION);
 		}
 
-		public void Blast()
+		public Tween Blast()
 		{
-			transform.DOScale(1.3f, BLAST_DURATION).SetEase(Ease.OutSine);
 			// tileRenderer.DOFade(0, BLAST_DURATION).SetEase(Ease.InSine);
 			// tileFaceRenderer.DOFade(0, BLAST_DURATION).SetEase(Ease.InSine);
 			transform.DOShakeRotation(BLAST_DURATION, 4 * Vector3.forward, 25, 2, false, ShakeRandomnessMode.Harmonic).SetEase(Ease.InQuart).OnComplete(() => Destroy(gameObject));
+			return transform.DOScale(1.3f, BLAST_DURATION).SetEase(Ease.OutSine);
 		}
 
 		private void Highlight()

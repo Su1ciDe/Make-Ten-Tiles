@@ -96,7 +96,7 @@ namespace GridSystem
 
 				var layer = new GameObject("Layer_" + (i + 1)).transform;
 				layer.SetParent(cellHolder);
-				layer.localPosition = new Vector3(layer.localPosition.x, i * 1f, layer.localPosition.z);
+				layer.localPosition = new Vector3(layer.localPosition.x, i * Tile.TILE_HEIGHT, layer.localPosition.z);
 				for (int y = 0; y < sizes[i].y; y++)
 				{
 					for (int x = 0; x < sizes[i].x; x++)
@@ -121,50 +121,52 @@ namespace GridSystem
 			for (int layerIndex = 1; layerIndex < gridCells.GetLength(0); layerIndex++)
 			{
 				var tilesLayerUp = gridCells[layerIndex];
-				var downLayerIndex = layerIndex - 1;
-				var tilesLayerDown = gridCells[downLayerIndex];
-
-				var normalizeDiffX = tilesLayerDown.GetLength(0) - tilesLayerUp.GetLength(0);
-				var coverTwoTileX = normalizeDiffX % 2 >= 0;
-				var normalizeDiffY = tilesLayerDown.GetLength(1) - tilesLayerUp.GetLength(1);
-				var coverTwoTileY = normalizeDiffY % 2 >= 0;
-
-				normalizeDiffX /= 2;
-				normalizeDiffY /= 2;
-
-				for (var x = 0; x < tilesLayerUp.GetLength(0); x++)
+				for (int downLayerIndex = layerIndex - 1; downLayerIndex >= 0; downLayerIndex--)
 				{
-					for (int y = 0; y < tilesLayerUp.GetLength(1); y++)
+					var tilesLayerDown = gridCells[downLayerIndex];
+					var normalizeDiffX = tilesLayerDown.GetLength(0) - tilesLayerUp.GetLength(0);
+					var coverTwoTileX = normalizeDiffX % 2 >= 0;
+					var normalizeDiffY = tilesLayerDown.GetLength(1) - tilesLayerUp.GetLength(1);
+					var coverTwoTileY = normalizeDiffY % 2 >= 0;
+
+					normalizeDiffX /= 2;
+					normalizeDiffY /= 2;
+
+					for (var x = 0; x < tilesLayerUp.GetLength(0); x++)
 					{
-						var cell = tilesLayerUp[x, y];
-						if (!cell.CurrentTile) continue;
-
-						var coverX = cell.Coordinates.x + normalizeDiffX;
-						var coverY = cell.Coordinates.y + normalizeDiffY;
-
-						if (coverX > tilesLayerDown.GetLength(0) || coverY > tilesLayerDown.GetLength(1)) continue;
-
-						if (gridCells[downLayerIndex, coverX, coverY] && gridCells[downLayerIndex, coverX, coverY].CurrentTile)
-							cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY].CurrentTile);
-
-						if (coverTwoTileX && coverTwoTileY)
+						for (int y = 0; y < tilesLayerUp.GetLength(1); y++)
 						{
-							if (IsInGrid(downLayerIndex, coverX + 1, coverY) && gridCells[downLayerIndex, coverX + 1, coverY] && gridCells[downLayerIndex, coverX + 1, coverY].CurrentTile)
+							var cell = tilesLayerUp[x, y];
+							if (!cell.CurrentTile) continue;
+
+							var coverX = cell.Coordinates.x + normalizeDiffX;
+							var coverY = cell.Coordinates.y + normalizeDiffY;
+
+							if (coverX > tilesLayerDown.GetLength(0) || coverY > tilesLayerDown.GetLength(1)) continue;
+
+							if (gridCells[downLayerIndex, coverX, coverY] && gridCells[downLayerIndex, coverX, coverY].CurrentTile)
+								cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY].CurrentTile);
+
+							if (coverTwoTileX && coverTwoTileY)
+							{
+								if (IsInGrid(downLayerIndex, coverX + 1, coverY) && gridCells[downLayerIndex, coverX + 1, coverY] && gridCells[downLayerIndex, coverX + 1, coverY].CurrentTile)
+									cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX + 1, coverY].CurrentTile);
+								if (IsInGrid(downLayerIndex, coverX, coverY + 1) && gridCells[downLayerIndex, coverX, coverY + 1] && gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile)
+									cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile);
+								if (IsInGrid(downLayerIndex, coverX + 1, coverY + 1) && gridCells[downLayerIndex, coverX + 1, coverY + 1] &&
+								    gridCells[downLayerIndex, coverX + 1, coverY + 1].CurrentTile)
+									cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX + 1, coverY + 1].CurrentTile);
+							}
+							else if (coverTwoTileX && IsInGrid(downLayerIndex, coverX + 1, coverY) && gridCells[downLayerIndex, coverX + 1, coverY] &&
+							         gridCells[downLayerIndex, coverX + 1, coverY].CurrentTile)
+							{
 								cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX + 1, coverY].CurrentTile);
-							if (IsInGrid(downLayerIndex, coverX, coverY + 1) && gridCells[downLayerIndex, coverX, coverY + 1] && gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile)
+							}
+							else if (coverTwoTileY && IsInGrid(downLayerIndex, coverX, coverY + 1) && gridCells[downLayerIndex, coverX, coverY + 1] &&
+							         gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile)
+							{
 								cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile);
-							if (IsInGrid(downLayerIndex, coverX + 1, coverY + 1) && gridCells[downLayerIndex, coverX + 1, coverY + 1] && gridCells[downLayerIndex, coverX + 1, coverY + 1].CurrentTile)
-								cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX + 1, coverY + 1].CurrentTile);
-						}
-						else if (coverTwoTileX && IsInGrid(downLayerIndex, coverX + 1, coverY) && gridCells[downLayerIndex, coverX + 1, coverY] &&
-						         gridCells[downLayerIndex, coverX + 1, coverY].CurrentTile)
-						{
-							cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX + 1, coverY].CurrentTile);
-						}
-						else if (coverTwoTileY && IsInGrid(downLayerIndex, coverX, coverY + 1) && gridCells[downLayerIndex, coverX, coverY + 1] &&
-						         gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile)
-						{
-							cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile);
+							}
 						}
 					}
 				}
