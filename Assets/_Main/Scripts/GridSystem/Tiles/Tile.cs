@@ -1,7 +1,9 @@
 using DG.Tweening;
 using Fiber.Managers;
+using Obstacles;
 using TMPro;
 using TriInspector;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -18,9 +20,11 @@ namespace GridSystem.Tiles
 		[field: SerializeField, ReadOnly, Group("Properties")] public CellType Type { get; private set; }
 		[field: SerializeField, ReadOnly, Group("Properties")] public GridCell CurrentCell { get; private set; }
 		[field: SerializeField, ReadOnly, Group("Properties")] public int LayerBlockCount { get; private set; }
+		[field: SerializeField, ReadOnly, Group("Properties")] public BaseObstacle Obstacle { get; private set; }
 
 		[Title("References")]
-		[SerializeField] private GameObject blockImage;
+		[SerializeField] private GameObject layerBlocker;
+		[SerializeField] private Transform obstacleHolder;
 		[SerializeField] private new Renderer renderer;
 		[SerializeField] private Collider col;
 		[SerializeField] private TextMeshPro txtAmount;
@@ -28,11 +32,18 @@ namespace GridSystem.Tiles
 		public static float JUMP_DURATION = .35F;
 		public static float BLAST_DURATION = .35F;
 		private const float HIGHLIGHT_DURATION = .15F;
+		private const float HIGHLIGHT_POS = .15F;
+		private const float HIGHLIGHT_SCALE = 1.1F;
 		private const float JUMP_POWER = 5;
 		public static float TILE_HEIGHT = .5F;
 
 		public static event UnityAction<Tile> OnTappedToTile;
 		public event UnityAction<Tile> OnTileRemoved;
+
+		private void OnDestroy()
+		{
+			transform.DOKill();
+		}
 
 		public void Setup(CellType cellType, GridCell cell)
 		{
@@ -52,8 +63,6 @@ namespace GridSystem.Tiles
 
 		public Tween Blast()
 		{
-			// tileRenderer.DOFade(0, BLAST_DURATION).SetEase(Ease.InSine);
-			// tileFaceRenderer.DOFade(0, BLAST_DURATION).SetEase(Ease.InSine);
 			transform.DOShakeRotation(BLAST_DURATION, 4 * Vector3.forward, 25, 2, false, ShakeRandomnessMode.Harmonic).SetEase(Ease.InQuart).OnComplete(() => Destroy(gameObject));
 			return transform.DOScale(1.3f, BLAST_DURATION).SetEase(Ease.OutSine);
 		}
@@ -61,8 +70,8 @@ namespace GridSystem.Tiles
 		private void Highlight()
 		{
 			transform.DOKill();
-			transform.DOLocalMoveZ(0.1f, HIGHLIGHT_DURATION).SetRelative().SetEase(Ease.OutBack);
-			transform.DOScale(1.1f, HIGHLIGHT_DURATION).SetEase(Ease.OutBack);
+			transform.DOLocalMoveZ(HIGHLIGHT_POS, HIGHLIGHT_DURATION).SetRelative().SetEase(Ease.OutBack);
+			transform.DOScale(HIGHLIGHT_SCALE, HIGHLIGHT_DURATION).SetEase(Ease.OutBack);
 		}
 
 		private void HideHighlight()
@@ -92,16 +101,16 @@ namespace GridSystem.Tiles
 			CheckBlockState();
 		}
 
-		public void CheckBlockState()
+		private void CheckBlockState()
 		{
 			if (LayerBlockCount > 0)
 			{
-				blockImage.SetActive(true);
+				layerBlocker.SetActive(true);
 				col.enabled = false;
 			}
 			else
 			{
-				blockImage.SetActive(false);
+				layerBlocker.SetActive(false);
 				col.enabled = true;
 			}
 		}
@@ -121,7 +130,10 @@ namespace GridSystem.Tiles
 		{
 			CurrentTile = this;
 
-			Highlight();
+			if (!Obstacle)
+			{
+				Highlight();
+			}
 		}
 
 		public void OnPointerUp(PointerEventData eventData)
@@ -136,6 +148,12 @@ namespace GridSystem.Tiles
 				transform.DOKill();
 
 				if (IsInDeck) return;
+				if (Obstacle && Obstacle.IsBlockingMovement)
+				{
+					Obstacle.OnTapped();
+					return;
+				}
+
 				IsInDeck = true;
 				col.enabled = false;
 
@@ -150,6 +168,19 @@ namespace GridSystem.Tiles
 			}
 		}
 
+		public void SetInteractable(bool interactable)
+		{
+			col.enabled = interactable;
+		}
+
 		#endregion
+
+#if UNITY_EDITOR
+		public void SetupObstacle(BaseObstacle obstacle)
+		{
+			Obstacle = (BaseObstacle)PrefabUtility.InstantiatePrefab(obstacle, obstacleHolder);
+			Obstacle.Setup(this);
+		}
+#endif
 	}
 }

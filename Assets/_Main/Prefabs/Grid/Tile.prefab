@@ -63,6 +63,7 @@ Transform:
   m_Children:
   - {fileID: 3652047055322635394}
   - {fileID: 2199882940312787084}
+  - {fileID: 5240207230971132790}
   m_Father: {fileID: 7594448418151767751}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &669403810219279999
@@ -401,8 +402,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Size: {x: 1, y: 0.5, z: 1}
+  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!114 &1665572431509453263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,10 +419,43 @@ MonoBehaviour:
   <Type>k__BackingField: 0
   <CurrentCell>k__BackingField: {fileID: 0}
   <LayerBlockCount>k__BackingField: 0
-  blockImage: {fileID: 297475974056133925}
+  <Obstacle>k__BackingField: {fileID: 0}
+  layerBlocker: {fileID: 297475974056133925}
+  obstacleHolder: {fileID: 5240207230971132790}
   renderer: {fileID: 5214562489833159985}
   col: {fileID: 6666646603849610823}
   txtAmount: {fileID: 464811429932843662}
+--- !u!1 &6935871472440628008
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5240207230971132790}
+  m_Layer: 7
+  m_Name: ObstacleHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5240207230971132790
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6935871472440628008}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 4242084996089998529}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7310678285239653104
 GameObject:
   m_ObjectHideFlags: 0

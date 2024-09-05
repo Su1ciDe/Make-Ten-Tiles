@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using Fiber.Managers;
+using Fiber.Utilities;
 using GridSystem.Tiles;
+using Obstacles;
 using TriInspector;
 using UnityEditor;
 using UnityEngine;
@@ -8,6 +11,8 @@ namespace GridSystem
 {
 	[SelectionBase]
 	[DeclareFoldoutGroup("Properties")]
+	[DeclareBoxGroup("Editor")]
+	[DeclareToggleGroup("Editor/Obstacles", Title = "Obstacle")]
 	public class GridCell : MonoBehaviour
 	{
 		[field: SerializeField, ReadOnly, Group("Properties")] public Tile CurrentTile { get; set; }
@@ -17,13 +22,51 @@ namespace GridSystem
 		[Title("References")]
 		[SerializeField] private Transform tileHolder;
 
-		#region MyRegion
+		#region Setup
 
 #if UNITY_EDITOR
+		[Group("Editor")] [SerializeField] private CellType tileType;
+
+		[Group("Editor/Obstacles")] [SerializeField] private bool hasObstacle;
+		[Group("Editor/Obstacles"), Dropdown(nameof(GetObstacles))] [SerializeField] private BaseObstacle obstacle;
+
+		[Button(ButtonSizes.Medium), Group("Editor")]
+		private void SetupTile()
+		{
+			if (CurrentTile)
+			{
+				DestroyImmediate(CurrentTile.gameObject);
+				CurrentTile = null;
+			}
+
+			CurrentTile = (Tile)PrefabUtility.InstantiatePrefab(GameManager.Instance.PrefabsSO.TilePrefab, tileHolder);
+			CurrentTile.Setup(tileType, this);
+
+			if (hasObstacle)
+			{
+				CurrentTile.SetupObstacle(obstacle);
+			}
+
+			GridManager.Instance.SetupTileBlockers();
+		}
+
+		[Button, Group("Editor")]
+		private void ClearTile()
+		{
+			if (CurrentTile)
+			{
+				DestroyImmediate(CurrentTile.gameObject);
+				CurrentTile = null;
+			}
+
+			GridManager.Instance.SetupTileBlockers();
+		}
+
 		public void Setup(int layerIndex, int x, int y, CellType cellType)
 		{
 			LayerIndex = layerIndex;
 			Coordinates = new Vector2Int(x, y);
+			tileType = cellType;
 
 			if (cellType != CellType.Empty)
 			{
@@ -33,6 +76,13 @@ namespace GridSystem
 
 				SceneVisibilityManager.instance.DisablePicking(tile.gameObject, true);
 			}
+		}
+
+		private IEnumerable<BaseObstacle> GetObstacles()
+		{
+			const string path = "Assets/_Main/Prefabs/Obstacles";
+			var obstacles = EditorUtilities.LoadAllAssetsFromPath<BaseObstacle>(path);
+			return obstacles;
 		}
 
 		private void OnDrawGizmos()

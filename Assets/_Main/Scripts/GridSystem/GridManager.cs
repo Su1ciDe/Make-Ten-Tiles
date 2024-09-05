@@ -23,7 +23,7 @@ namespace GridSystem
 		[Title("References")]
 		[SerializeField] private Transform cellHolder;
 
-		[Title("Setup")]
+		[Title("Editor")]
 		[SerializeField] private Array2DGrid[] grid;
 
 		[SerializeField, HideInInspector] private List<Vector2Int> sizes = new List<Vector2Int>();
@@ -81,7 +81,7 @@ namespace GridSystem
 		[Button(ButtonSizes.Large)]
 		private void Setup()
 		{
-			CleanGrid();
+			ClearGrid();
 
 			sizes = new List<Vector2Int>();
 			gridCells = new GridCell3D();
@@ -116,7 +116,7 @@ namespace GridSystem
 			SetupTileBlockers();
 		}
 
-		private void SetupTileBlockers()
+		public void SetupTileBlockers()
 		{
 			for (int layerIndex = 1; layerIndex < gridCells.GetLength(0); layerIndex++)
 			{
@@ -174,28 +174,26 @@ namespace GridSystem
 		}
 
 		[Button]
-		private void CleanGrid()
+		private void ClearGrid()
 		{
 			cellHolder.DestroyImmediateChildren();
 		}
 
 		private void OnValidate()
 		{
-			if (gridCells != null)
+			if (gridCells is null) return;
+			for (int i = 0; i < gridCells.GetLength(0); i++)
 			{
-				for (int i = 0; i < gridCells.GetLength(0); i++)
+				var cells = gridCells[i];
+				for (int x = 0; x < cells.GetLength(0); x++)
 				{
-					var cells = gridCells[i];
-					for (int x = 0; x < cells.GetLength(0); x++)
+					for (int y = 0; y < cells.GetLength(1); y++)
 					{
-						for (int y = 0; y < cells.GetLength(1); y++)
-						{
-							var gridCell = GetCell(i, x, y);
-							if (!gridCell) return;
-							if (gridCell.CurrentTile is null) continue;
+						var gridCell = GetCell(i, x, y);
+						if (!gridCell) return;
+						if (gridCell.CurrentTile is null) continue;
 
-							SceneVisibilityManager.instance.DisablePicking(gridCell.CurrentTile.gameObject, true);
-						}
+						SceneVisibilityManager.instance.DisablePicking(gridCell.CurrentTile.gameObject, true);
 					}
 				}
 			}
