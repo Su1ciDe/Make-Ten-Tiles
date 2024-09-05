@@ -3,6 +3,7 @@ using Fiber.Managers;
 using Fiber.Utilities;
 using Fiber.Utilities.Extensions;
 using GridSystem.Tiles;
+using Obstacles;
 using TriInspector;
 using UnityEditor;
 using UnityEngine;
@@ -70,6 +71,39 @@ namespace GridSystem
 		public Tile GetTile(Vector3Int coordinates)
 		{
 			return GetCell(coordinates)?.CurrentTile;
+		}
+
+		public T FindObstacle<T>(bool isReversed = true) where T : BaseObstacle
+		{
+			T obstacle;
+			if (isReversed)
+			{
+				for (int i = gridCells.GetLength(0) - 1; i >= 0; i--)
+				{
+					obstacle = GetObstacle<T>(i);
+					if (obstacle) return obstacle;
+				}
+			}
+			else
+			{
+				for (int i = 0; i < gridCells.GetLength(0); i++)
+				{
+					obstacle = GetObstacle<T>(i);
+					if (obstacle) return obstacle;
+				}
+			}
+
+			return null;
+
+			TM GetObstacle<TM>(int i) where TM : BaseObstacle
+			{
+				for (int x = 0; x < gridCells[i].GetLength(0); x++)
+					for (int y = 0; y < gridCells[i].GetLength(1); y++)
+						if (gridCells[i, x, y].CurrentTile && gridCells[i, x, y].CurrentTile.Obstacle && gridCells[i, x, y].CurrentTile.Obstacle is TM obs)
+							return obs;
+
+				return null;
+			}
 		}
 
 		#endregion

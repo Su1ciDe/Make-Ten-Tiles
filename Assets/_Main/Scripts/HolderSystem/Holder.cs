@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Fiber.Managers;
 using Fiber.Utilities;
+using GridSystem;
 using GridSystem.Tiles;
 using UnityEngine;
 
@@ -21,6 +22,11 @@ namespace HolderSystem
 		private void Awake()
 		{
 			Setup();
+		}
+
+		private void Start()
+		{
+			transform.position = new Vector3(transform.position.x, transform.position.y, -GridManager.Instance.GridCells.GetLength(0) * Tile.TILE_HEIGHT);
 		}
 
 		private void OnEnable()

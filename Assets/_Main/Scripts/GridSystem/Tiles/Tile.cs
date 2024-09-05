@@ -29,12 +29,14 @@ namespace GridSystem.Tiles
 		[SerializeField] private Collider col;
 		[SerializeField] private TextMeshPro txtAmount;
 
-		public static float JUMP_DURATION = .35F;
+		public static float JUMP_DURATION = .5F;
+		private const float JUMP_POWER = 5;
 		public static float BLAST_DURATION = .35F;
+
 		private const float HIGHLIGHT_DURATION = .15F;
 		private const float HIGHLIGHT_POS = .15F;
 		private const float HIGHLIGHT_SCALE = 1.1F;
-		private const float JUMP_POWER = 5;
+
 		public static float TILE_HEIGHT = .5F;
 
 		public static event UnityAction<Tile> OnTappedToTile;
@@ -106,12 +108,12 @@ namespace GridSystem.Tiles
 			if (LayerBlockCount > 0)
 			{
 				layerBlocker.SetActive(true);
-				col.enabled = false;
+				SetInteractable(false);
 			}
 			else
 			{
 				layerBlocker.SetActive(false);
-				col.enabled = true;
+				SetInteractable(true);
 			}
 		}
 
@@ -155,7 +157,7 @@ namespace GridSystem.Tiles
 				}
 
 				IsInDeck = true;
-				col.enabled = false;
+				SetInteractable(false);
 
 				OnTappedToTile?.Invoke(this);
 				OnTileRemoved?.Invoke(this);
