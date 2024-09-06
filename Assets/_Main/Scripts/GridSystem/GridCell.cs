@@ -29,6 +29,7 @@ namespace GridSystem
 
 		[Group("Editor/Obstacles")] [SerializeField] private bool hasObstacle;
 		[Group("Editor/Obstacles"), Dropdown(nameof(GetObstacles))] [SerializeField] private BaseObstacle obstacle;
+		[Group("Editor/Obstacles"), ShowIf(nameof(IsGlueObstacle))] [SerializeField] private GridCell gluedCell;
 
 		[Button(ButtonSizes.Medium), Group("Editor")]
 		private void SetupTile()
@@ -45,6 +46,13 @@ namespace GridSystem
 			if (hasObstacle)
 			{
 				CurrentTile.SetupObstacle(obstacle);
+
+				// If the obstacle is a GlueObstacle
+				if (IsGlueObstacle() && gluedCell.CurrentTile)
+				{
+					var glueObstacle = (GlueObstacle)CurrentTile.Obstacle;
+					glueObstacle.Setup(CurrentTile, gluedCell.CurrentTile);
+				}
 			}
 
 			GridManager.Instance.SetupTileBlockers();
@@ -84,6 +92,8 @@ namespace GridSystem
 			var obstacles = EditorUtilities.LoadAllAssetsFromPath<BaseObstacle>(path);
 			return obstacles;
 		}
+
+		private bool IsGlueObstacle() => obstacle is GlueObstacle;
 
 		private void OnDrawGizmos()
 		{

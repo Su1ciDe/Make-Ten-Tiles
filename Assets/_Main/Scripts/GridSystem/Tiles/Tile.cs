@@ -20,7 +20,7 @@ namespace GridSystem.Tiles
 		[field: SerializeField, ReadOnly, Group("Properties")] public CellType Type { get; private set; }
 		[field: SerializeField, ReadOnly, Group("Properties")] public GridCell CurrentCell { get; private set; }
 		[field: SerializeField, ReadOnly, Group("Properties")] public int LayerBlockCount { get; private set; }
-		[field: SerializeField, ReadOnly, Group("Properties")] public BaseObstacle Obstacle { get; private set; }
+		[field: SerializeField, ReadOnly, Group("Properties")] public BaseObstacle Obstacle { get; set; }
 
 		[Title("References")]
 		[SerializeField] private GameObject layerBlocker;
@@ -156,11 +156,7 @@ namespace GridSystem.Tiles
 					return;
 				}
 
-				IsInDeck = true;
-				SetInteractable(false);
-
-				OnTappedToTile?.Invoke(this);
-				OnTileRemoved?.Invoke(this);
+				RemoveTile();
 
 				CurrentTile = null;
 			}
@@ -176,6 +172,15 @@ namespace GridSystem.Tiles
 		}
 
 		#endregion
+
+		public void RemoveTile()
+		{
+			IsInDeck = true;
+			SetInteractable(false);
+
+			OnTappedToTile?.Invoke(this);
+			OnTileRemoved?.Invoke(this);
+		}
 
 #if UNITY_EDITOR
 		public void SetupObstacle(BaseObstacle obstacle)

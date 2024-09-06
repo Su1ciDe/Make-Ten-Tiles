@@ -73,6 +73,11 @@ namespace GridSystem
 			return GetCell(coordinates)?.CurrentTile;
 		}
 
+		public Transform GetLayerTransform(int layerIndex)
+		{
+			return cellHolder.GetChild(layerIndex);
+		}
+
 		public T FindObstacle<T>(bool isReversed = true) where T : BaseObstacle
 		{
 			T obstacle;
@@ -95,11 +100,11 @@ namespace GridSystem
 
 			return null;
 
-			TM GetObstacle<TM>(int i) where TM : BaseObstacle
+			TO GetObstacle<TO>(int i) where TO : BaseObstacle
 			{
 				for (int x = 0; x < gridCells[i].GetLength(0); x++)
 					for (int y = 0; y < gridCells[i].GetLength(1); y++)
-						if (gridCells[i, x, y].CurrentTile && gridCells[i, x, y].CurrentTile.Obstacle && gridCells[i, x, y].CurrentTile.Obstacle is TM obs)
+						if (gridCells[i, x, y].CurrentTile && gridCells[i, x, y].CurrentTile.Obstacle && gridCells[i, x, y].CurrentTile.Obstacle is TO obs)
 							return obs;
 
 				return null;
@@ -231,6 +236,14 @@ namespace GridSystem
 					}
 				}
 			}
+		}
+
+		private void OnGUI()
+		{
+			Handles.BeginGUI();
+			GUI.enabled = true;
+			GUI.Button(new Rect(0, 0, 100, 100), "ashjkashjkdhjkasjhkdkhjasdjkhahskjdhjksajhk");
+			Handles.EndGUI();
 		}
 #endif
 
