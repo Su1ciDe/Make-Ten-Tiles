@@ -286,23 +286,8 @@ MonoBehaviour:
   - {x: 6, y: 7}
   - {x: 5, y: 6}
   - {x: 4, y: 5}
-  randomSizes:
-  - {x: 6, y: 7}
-  - {x: 5, y: 6}
-  - {x: 4, y: 5}
-  randomizer:
-  - Color: 1
-    Weight: 1
-    Percentage: 25.00%
-  - Color: 2
-    Weight: 1
-    Percentage: 25.00%
-  - Color: 8
-    Weight: 1
-    Percentage: 25.00%
-  - Color: 9
-    Weight: 1
-    Percentage: 25.00%
+  randomSizes: []
+  randomizer: []
 --- !u!1001 &2202721786140504892
 PrefabInstance:
   m_ObjectHideFlags: 0

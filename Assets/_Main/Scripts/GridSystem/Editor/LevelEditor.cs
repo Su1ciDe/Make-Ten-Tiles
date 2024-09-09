@@ -18,6 +18,17 @@ namespace GridSystem
 			layerCount = currentLayerIndex = GridManager.Instance.GridCells.GetLength(0);
 		}
 
+		private static void ResetGrid()
+		{
+			layerCount = currentLayerIndex = GridManager.Instance.GridCells.GetLength(0);
+			for (int i = 0; i < GridManager.Instance.GridCells.GetLength(0); i++)
+			{
+				var layer = GridManager.Instance.GetLayerTransform(i);
+				if (SceneVisibilityManager.instance.IsHidden(layer.gameObject, true))
+					SceneVisibilityManager.instance.ToggleVisibility(layer.gameObject, true);
+			}
+		}
+
 		private static void OnDuringSceneGui(SceneView obj)
 		{
 			if (!GridManager.Instance) return;
@@ -44,6 +55,11 @@ namespace GridSystem
 							var layer = GridManager.Instance.GetLayerTransform(currentLayerIndex);
 							SceneVisibilityManager.instance.ToggleVisibility(layer.gameObject, true);
 						}
+					}
+
+					if (GUILayout.Button("Reset"))
+					{
+						ResetGrid();
 					}
 				}
 				GUILayout.EndArea();

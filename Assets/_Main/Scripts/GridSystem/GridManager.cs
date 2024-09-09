@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Fiber.Managers;
 using Fiber.Utilities;
 using Fiber.Utilities.Extensions;
@@ -50,13 +51,15 @@ namespace GridSystem
 		private void OnDisable()
 		{
 			Tile.OnTappedToTile -= OnTappedToTile;
+			
 		}
 
-		private void OnTappedToTile(Tile tile)
+		private async void OnTappedToTile(Tile tile)
 		{
 			totalTileCount--;
 			if (totalTileCount <= 0)
 			{
+				await UniTask.WaitForSeconds(1);
 				LevelManager.Instance.Win();
 			}
 		}
