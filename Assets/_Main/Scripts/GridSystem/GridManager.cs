@@ -160,6 +160,12 @@ namespace GridSystem
 		[Group("Randomizer"), Button]
 		private void Randomize()
 		{
+			if (!CheckCanRandom())
+			{
+				Debug.Log("Not enough cells to complete level!");
+				return;
+			}
+
 			ClearGrid();
 			var randomWeights = randomizer.Select(x => x.Weight).ToArray();
 
@@ -181,19 +187,44 @@ namespace GridSystem
 				{
 					for (int x = 0; x < sizes[i].x; x++)
 					{
-						var gridCell = randomizer.WeightedRandom(randomWeights).Color;
-
 						var cell = (GridCell)PrefabUtility.InstantiatePrefab(GameManager.Instance.PrefabsSO.GridCellPrefab, layer.transform);
 						cell.transform.localPosition = new Vector3(x * (nodeSize.x + xSpacing) - xOffset, -y * (nodeSize.y + ySpacing) + yOffset);
 						cell.transform.localRotation = transform.rotation;
 						cell.gameObject.name = x + " - " + y;
-						cell.Setup(i, x, y, gridCell);
 						gridCells[i, x, y] = cell;
+						
+						if (randomGrid[i].GetCell(x, y) == CellType.Filled)
+						{
+							var gridCell = randomizer.WeightedRandom(randomWeights).Color;
+							cell.Setup(i, x, y, gridCell);
+						}
+						else
+						{
+							cell.Setup(i, x, y, TileType.Empty);
+						}
 					}
 				}
 			}
 
 			SetupTileBlockers();
+		}
+
+		private bool CheckCanRandom()
+		{
+			var totalCount = 0;
+			foreach (var array2DCell in randomGrid)
+			{
+				for (int x = 0; x < array2DCell.GridSize.x; x++)
+				{
+					for (int y = 0; y < array2DCell.GridSize.y; y++)
+					{
+						if (array2DCell.GetCell(x, y) != CellType.Empty)
+							totalCount++;
+					}
+				}
+			}
+
+			return totalCount % 2 == 0;
 		}
 
 		[Button(ButtonSizes.Large)]

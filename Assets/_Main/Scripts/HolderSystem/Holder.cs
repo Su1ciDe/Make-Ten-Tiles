@@ -109,6 +109,8 @@ namespace HolderSystem
 		private void TenBlast(Tile tile, HolderGroup tenGroup)
 		{
 			var tileInDeck = tenGroup.Tiles[0];
+			tileInDeck.IsCompleted = true;
+			tile.IsCompleted = true;
 			tile.transform.SetParent(tenGroup.transform);
 			tile.Jump(1 * Vector3.up).OnComplete(() =>
 			{
@@ -160,7 +162,7 @@ namespace HolderSystem
 			{
 				for (var j = 0; j < holderGroups[i].Tiles.Count; j++)
 				{
-					if ((int)holderGroups[i].Tiles[j].Type + (int)tile.Type == GameManager.BLAST_COUNT)
+					if ((int)holderGroups[i].Tiles[j].Type + (int)tile.Type == GameManager.BLAST_COUNT && !holderGroups[i].Tiles[j].IsCompleted)
 						return holderGroups[i];
 				}
 			}

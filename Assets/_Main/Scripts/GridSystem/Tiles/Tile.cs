@@ -21,6 +21,7 @@ namespace GridSystem.Tiles
 		[field: SerializeField, ReadOnly, Group("Properties")] public GridCell CurrentCell { get; private set; }
 		[field: SerializeField, ReadOnly, Group("Properties")] public int LayerBlockCount { get; private set; }
 		[field: SerializeField, ReadOnly, Group("Properties")] public BaseObstacle Obstacle { get; set; }
+		public bool IsCompleted { get; set; } = false;
 
 		[Title("References")]
 		[SerializeField] private GameObject layerBlocker;
