@@ -17,7 +17,7 @@ namespace GridSystem.Tiles
 		public bool IsInDeck { get; set; } = false;
 
 		[field: Title("Properties")]
-		[field: SerializeField, ReadOnly, Group("Properties")] public CellType Type { get; private set; }
+		[field: SerializeField, ReadOnly, Group("Properties")] public TileType Type { get; private set; }
 		[field: SerializeField, ReadOnly, Group("Properties")] public GridCell CurrentCell { get; private set; }
 		[field: SerializeField, ReadOnly, Group("Properties")] public int LayerBlockCount { get; private set; }
 		[field: SerializeField, ReadOnly, Group("Properties")] public BaseObstacle Obstacle { get; set; }
@@ -47,10 +47,10 @@ namespace GridSystem.Tiles
 			transform.DOKill();
 		}
 
-		public void Setup(CellType cellType, GridCell cell)
+		public void Setup(TileType tileType, GridCell cell)
 		{
-			Type = cellType;
-			txtAmount.SetText(((int)cellType).ToString());
+			Type = tileType;
+			txtAmount.SetText(((int)tileType).ToString());
 			CurrentCell = cell;
 			CurrentCell.CurrentTile = this;
 

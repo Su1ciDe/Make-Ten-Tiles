@@ -7,6 +7,6 @@ namespace ScriptableObjects
 	[CreateAssetMenu(fileName = "Colors", menuName = "Make Ten Tiles/Colors", order = 1)]
 	public class ColorsSO : ScriptableObject
 	{
-		public SerializedDictionary<CellType, Material> Materials = new SerializedDictionary<CellType, Material>();
+		public SerializedDictionary<TileType, Material> Materials = new SerializedDictionary<TileType, Material>();
 	}
 }
