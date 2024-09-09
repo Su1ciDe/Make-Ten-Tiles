@@ -6,7 +6,7 @@ namespace GridSystem
 	public class Array2DGridDrawer
 	{
 		[CustomPropertyDrawer(typeof(Array2DGrid))]
-		public class Array2DExampleEnumDrawer : Array2DEnumDrawer<CellType>
+		public class Array2DExampleEnumDrawer : Array2DEnumDrawer<TileType>
 		{
 		}
 	}

@@ -25,7 +25,7 @@ namespace GridSystem
 		#region Setup
 
 #if UNITY_EDITOR
-		[Group("Editor")] [SerializeField] private CellType tileType;
+		[Group("Editor")] [SerializeField] private TileType tileType;
 
 		[Group("Editor/Obstacles")] [SerializeField] private bool hasObstacle;
 		[Group("Editor/Obstacles"), Dropdown(nameof(GetObstacles))] [SerializeField] private BaseObstacle obstacle;
@@ -70,17 +70,17 @@ namespace GridSystem
 			GridManager.Instance.SetupTileBlockers();
 		}
 
-		public void Setup(int layerIndex, int x, int y, CellType cellType)
+		public void Setup(int layerIndex, int x, int y, TileType tileType)
 		{
 			LayerIndex = layerIndex;
 			Coordinates = new Vector2Int(x, y);
-			tileType = cellType;
+			this.tileType = tileType;
 
-			if (cellType != CellType.Empty)
+			if (tileType != TileType.Empty)
 			{
 				var tile = (Tile)PrefabUtility.InstantiatePrefab(GameManager.Instance.PrefabsSO.TilePrefab, tileHolder);
 				tile.transform.localPosition = Vector3.zero;
-				tile.Setup(cellType, this);
+				tile.Setup(tileType, this);
 
 				SceneVisibilityManager.instance.DisablePicking(tile.gameObject, true);
 			}
