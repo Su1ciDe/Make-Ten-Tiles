@@ -51,7 +51,6 @@ namespace GridSystem
 		private void OnDisable()
 		{
 			Tile.OnTappedToTile -= OnTappedToTile;
-			
 		}
 
 		private async void OnTappedToTile(Tile tile)
@@ -149,12 +148,13 @@ namespace GridSystem
 		[DeclareHorizontalGroup("Colors")]
 		private class Randomizer
 		{
-			[Group("Colors")] public CellType Color;
+			[Group("Colors")] public TileType Color;
 			[Group("Colors")] public int Weight = 1;
 			[Group("Colors"), DisplayAsString, HideLabel] public string Percentage;
 		}
 
-		[Group("Randomizer")] [SerializeField] private List<Vector2Int> randomSizes = new List<Vector2Int>();
+		// [Group("Randomizer")] [SerializeField] private List<Vector2Int> randomSizes = new List<Vector2Int>();
+		[Group("Randomizer")] [SerializeField] private Array2DCell[] randomGrid;
 		[Group("Randomizer")] [SerializeField] private Randomizer[] randomizer;
 
 		[Group("Randomizer"), Button]
@@ -166,9 +166,9 @@ namespace GridSystem
 			sizes = new List<Vector2Int>();
 			gridCells = new GridCell3D();
 
-			for (int i = 0; i < randomSizes.Count; i++)
+			for (int i = 0; i < randomGrid.Length; i++)
 			{
-				sizes.Add(randomSizes[i]);
+				sizes.Add(randomGrid[i].GridSize);
 				var xOffset = (nodeSize.x * sizes[i].x + xSpacing * (sizes[i].x - 1)) / 2f - nodeSize.x / 2f;
 				var yOffset = (nodeSize.y * sizes[i].y + ySpacing * (sizes[i].y - 1)) / 2f - nodeSize.y / 2f;
 
@@ -263,8 +263,24 @@ namespace GridSystem
 
 							if (coverX > tilesLayerDown.GetLength(0) || coverY > tilesLayerDown.GetLength(1)) continue;
 
-							if (gridCells[downLayerIndex, coverX, coverY] && gridCells[downLayerIndex, coverX, coverY].CurrentTile)
-								cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY].CurrentTile);
+							if (coverX < tilesLayerDown.GetLength(0) && coverY < tilesLayerDown.GetLength(1))
+							{
+								if (gridCells[downLayerIndex, coverX, coverY] && gridCells[downLayerIndex, coverX, coverY].CurrentTile)
+									cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY].CurrentTile);
+							}
+							else // If the down layer's grid is smaller than the upper layer
+							{
+								if (coverX >= tilesLayerDown.GetLength(0))
+								{
+									if (gridCells[downLayerIndex, coverX - 1, coverY] && gridCells[downLayerIndex, coverX - 1, coverY].CurrentTile)
+										cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX - 1, coverY].CurrentTile);
+								}
+								else if (coverY >= tilesLayerDown.GetLength(1))
+								{
+									if (gridCells[downLayerIndex, coverX, coverY - 1] && gridCells[downLayerIndex, coverX, coverY - 1].CurrentTile)
+										cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY - 1].CurrentTile);
+								}
+							}
 
 							if (coverTwoTileX && coverTwoTileY)
 							{

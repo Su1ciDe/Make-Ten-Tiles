@@ -286,7 +286,7 @@ MonoBehaviour:
   - {x: 6, y: 7}
   - {x: 5, y: 6}
   - {x: 4, y: 5}
-  randomSizes: []
+  randomGrid: []
   randomizer: []
 --- !u!1001 &2202721786140504892
 PrefabInstance:
@@ -306,7 +306,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9007490644840363636, guid: 52f0b01760d6d48c5850469bdcae7354, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.5
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: 9007490644840363636, guid: 52f0b01760d6d48c5850469bdcae7354, type: 3}
       propertyPath: m_LocalPosition.z
