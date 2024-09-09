@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &272808985434880562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5846105558391107509}
+  m_Layer: 0
+  m_Name: CellHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5846105558391107509
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272808985434880562}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 2214877173332427715}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3930341068101061373
 GameObject:
   m_ObjectHideFlags: 0
@@ -30,6 +61,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 2214877173332427715}
   - {fileID: 7174422015837078856}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -45,6 +77,232 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17e8851ca1ce4367b6d67cf248f46fab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7972604201813806021
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2214877173332427715}
+  - component: {fileID: 3240947888734713495}
+  m_Layer: 0
+  m_Name: Grid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2214877173332427715
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7972604201813806021}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.70710677, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 5846105558391107509}
+  m_Father: {fileID: 5772685810015609396}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &3240947888734713495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7972604201813806021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e38e17ccee443438f20f6cf472f4729, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridCells:
+    Matrices:
+    - Arrays:
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+    - Arrays:
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+    - Arrays:
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+      - Cells:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+  nodeSize: {x: 1, y: 1}
+  xSpacing: 0.05
+  ySpacing: 0.05
+  cellHolder: {fileID: 5846105558391107509}
+  grid:
+  - gridSize: {x: 6, y: 7}
+    cellSize: {x: 64, y: 16}
+    cells:
+    - row: 010000000200000002000000030000000100000003000000
+    - row: 050000000600000007000000050000000300000000000000
+    - row: 050000000600000009000000040000000100000000000000
+    - row: 040000000400000007000000060000000300000000000000
+    - row: 060000000500000007000000070000000700000000000000
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 030000000000000007000000000000000000000000000000
+  - gridSize: {x: 3, y: 4}
+    cellSize: {x: 64, y: 16}
+    cells:
+    - row: 020000000200000002000000
+    - row: 020000000200000002000000
+    - row: 020000000200000002000000
+    - row: 020000000200000002000000
+  - gridSize: {x: 2, y: 3}
+    cellSize: {x: 64, y: 16}
+    cells:
+    - row: 0300000007000000
+    - row: 0200000008000000
+    - row: 0400000006000000
+  - gridSize: {x: 6, y: 7}
+    cellSize: {x: 64, y: 16}
+    cells:
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 010000000000000000000000000000000000000000000000
+  - gridSize: {x: 6, y: 7}
+    cellSize: {x: 64, y: 16}
+    cells:
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 000000000000000000000000000000000000000000000000
+    - row: 020000000000000000000000000000000000000000000000
+  sizes:
+  - {x: 6, y: 7}
+  - {x: 5, y: 6}
+  - {x: 4, y: 5}
+  randomSizes:
+  - {x: 6, y: 7}
+  - {x: 5, y: 6}
+  - {x: 4, y: 5}
+  randomizer:
+  - Color: 1
+    Weight: 1
+    Percentage: 25.00%
+  - Color: 2
+    Weight: 1
+    Percentage: 25.00%
+  - Color: 8
+    Weight: 1
+    Percentage: 25.00%
+  - Color: 9
+    Weight: 1
+    Percentage: 25.00%
 --- !u!1001 &2202721786140504892
 PrefabInstance:
   m_ObjectHideFlags: 0

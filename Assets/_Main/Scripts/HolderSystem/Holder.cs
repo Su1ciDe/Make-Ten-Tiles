@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Fiber.Managers;
 using Fiber.Utilities;
@@ -12,12 +15,15 @@ namespace HolderSystem
 	public class Holder : Singleton<Holder>
 	{
 		[SerializeField] private int slotCount = 7;
+		[SerializeField] private int unlockLevel = 0;
 
 		private readonly List<HolderGroup> holderGroups = new List<HolderGroup>();
 		private readonly List<HolderSlot> holderSlots = new List<HolderSlot>();
 		private readonly Queue<HolderGroup> holderGroupPool = new Queue<HolderGroup>();
 
 		private readonly WaitForSeconds waitBlast = new WaitForSeconds(Tile.BLAST_DURATION);
+
+		private CancellationTokenSource token = new CancellationTokenSource();
 
 		private void Awake()
 		{
@@ -37,6 +43,7 @@ namespace HolderSystem
 		private void OnDisable()
 		{
 			Tile.OnTappedToTile -= AddTileToDeck;
+			token.Dispose();
 		}
 
 		private void Setup()
@@ -50,13 +57,19 @@ namespace HolderSystem
 				slot.transform.localPosition = new Vector3(i * holderSlotPrefab.Size - offset, 0, 0);
 				holderSlots.Add(slot);
 
+				if (i == slotCount - 1 && LevelManager.Instance.LevelNo < unlockLevel)
+				{
+					slot.Lock(unlockLevel);
+					continue;
+				}
+
 				var deckGroup = Instantiate(holderGroupPrefab, transform);
 				deckGroup.gameObject.SetActive(false);
 				holderGroupPool.Enqueue(deckGroup);
 			}
 		}
 
-		public void AddTileToDeck(Tile tile)
+		public async void AddTileToDeck(Tile tile)
 		{
 			var tenGroup = FindTen(tile);
 			if (tenGroup)
@@ -67,6 +80,8 @@ namespace HolderSystem
 			{
 				if (!holderGroupPool.TryDequeue(out var newGroup)) return;
 
+				token.Cancel();
+
 				newGroup.gameObject.SetActive(true);
 				var tileCount = GetTotalTileCount();
 				newGroup.Setup(holderSlots[tileCount]);
@@ -75,7 +90,16 @@ namespace HolderSystem
 
 				//TODO: wait for blast
 				// Check if the holder is full and lose the game
-				if (GetTotalTileCount().Equals(slotCount))
+				try
+				{
+					await UniTask.WaitForSeconds(0.5f, cancellationToken: token.Token);
+				}
+				catch (OperationCanceledException e)
+				{
+				}
+
+				var lockedCount = LevelManager.Instance.LevelNo < unlockLevel ? 1 : 0;
+				if (GetTotalTileCount().Equals(slotCount - lockedCount))
 				{
 					LevelManager.Instance.Lose();
 				}
@@ -114,21 +138,21 @@ namespace HolderSystem
 			}
 		}
 
-		private void OnBlast(HolderGroup holderGroup)
-		{
-			StartCoroutine(WaitBlast());
-			return;
-
-			IEnumerator WaitBlast()
-			{
-				yield return waitBlast;
-
-				holderGroups.Remove(holderGroup);
-				holderGroupPool.Enqueue(holderGroup);
-				holderGroup.gameObject.SetActive(false);
-				RearrangeGroups();
-			}
-		}
+		// private void OnBlast(HolderGroup holderGroup)
+		// {
+		// 	StartCoroutine(WaitBlast());
+		// 	return;
+		//
+		// 	IEnumerator WaitBlast()
+		// 	{
+		// 		yield return waitBlast;
+		//
+		// 		holderGroups.Remove(holderGroup);
+		// 		holderGroupPool.Enqueue(holderGroup);
+		// 		holderGroup.gameObject.SetActive(false);
+		// 		RearrangeGroups();
+		// 	}
+		// }
 
 		public HolderGroup FindTen(Tile tile)
 		{

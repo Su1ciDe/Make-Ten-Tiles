@@ -6,6 +6,9 @@ namespace GridSystem
 	public class GridCell3D
 	{
 		public List<GridCellMatrix> Matrices;
+		public int Count => count;
+		private int count;
+
 		public GridCell this[int x, int y, int z]
 		{
 			get => Matrices[x][y, z];
@@ -22,6 +25,8 @@ namespace GridSystem
 			Matrices = new List<GridCellMatrix>();
 			for (int i = 0; i < index0; i++)
 				Matrices[i] = new GridCellMatrix(index1, index2);
+
+			CalculateCount();
 		}
 
 		public GridCell3D()
@@ -38,6 +43,34 @@ namespace GridSystem
 				2 => Matrices[0].Arrays[0].Cells.Length,
 				_ => 0
 			};
+		}
+
+		private void CalculateCount()
+		{
+			count = 0;
+			foreach (var matrix in Matrices)
+			{
+				foreach (var array in matrix.Arrays)
+					count += array.Cells.Length;
+			}
+		}
+
+		public int GetTileCount()
+		{
+			var tileCount = 0;
+			foreach (var matrix in Matrices)
+			{
+				foreach (var array in matrix.Arrays)
+				{
+					foreach (var cell in array.Cells)
+					{
+						if (cell.CurrentTile is not null)
+							tileCount++;
+					}
+				}
+			}
+
+			return tileCount;
 		}
 
 		[System.Serializable]
