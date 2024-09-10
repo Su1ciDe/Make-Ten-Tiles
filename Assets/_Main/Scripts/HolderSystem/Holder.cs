@@ -69,7 +69,7 @@ namespace HolderSystem
 			}
 		}
 
-		public async void AddTileToDeck(Tile tile)
+		public void AddTileToDeck(Tile tile)
 		{
 			var tenGroup = FindTen(tile);
 			if (tenGroup)
@@ -90,20 +90,15 @@ namespace HolderSystem
 
 				//TODO: wait for blast
 				// Check if the holder is full and lose the game
-				try
-				{
-					await UniTask.WaitForSeconds(0.5f, cancellationToken: token.Token);
-				}
-				catch (OperationCanceledException e)
-				{
-				}
-
-				var lockedCount = LevelManager.Instance.LevelNo < unlockLevel ? 1 : 0;
-				if (GetTotalTileCount().Equals(slotCount - lockedCount))
-				{
-					LevelManager.Instance.Lose();
-				}
 			}
+
+			if (checkFailCoroutine is not null)
+			{
+				StopCoroutine(checkFailCoroutine);
+				checkFailCoroutine = null;
+			}
+
+			checkFailCoroutine = StartCoroutine(CheckFail());
 		}
 
 		private void TenBlast(Tile tile, HolderGroup tenGroup)
@@ -137,6 +132,22 @@ namespace HolderSystem
 				}
 
 				holderGroups[i].MoveToSlot(holderSlots[count]);
+			}
+		}
+
+		private Coroutine checkFailCoroutine;
+
+		private IEnumerator CheckFail()
+		{
+			yield return null;
+			yield return new WaitForSeconds(Tile.JUMP_DURATION);
+			yield return new WaitForSeconds(Tile.BLAST_DURATION);
+			yield return null;
+
+			var lockedCount = LevelManager.Instance.LevelNo < unlockLevel ? 1 : 0;
+			if (GetTotalTileCount().Equals(slotCount - lockedCount))
+			{
+				LevelManager.Instance.Lose();
 			}
 		}
 
