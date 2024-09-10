@@ -288,7 +288,7 @@ namespace GridSystem
 			}
 
 			TryToSolveRandom(randomWeights);
-			
+
 			SetupTileBlockers();
 		}
 
@@ -317,7 +317,7 @@ namespace GridSystem
 			{
 				var cell = gridCells[i, x, y];
 				var tileType = randomizer.WeightedRandom(randomWeights).Color;
-				cell.ClearTile();
+				cell.ClearTile(false);
 				cell.Setup(i, x, y, tileType);
 			}
 
@@ -389,6 +389,7 @@ namespace GridSystem
 
 		public void SetupTileBlockers()
 		{
+			Debug.Log("VAR");
 			for (int layerIndex = 1; layerIndex < gridCells.GetLength(0); layerIndex++)
 			{
 				var tilesLayerUp = gridCells[layerIndex];

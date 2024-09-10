@@ -59,7 +59,7 @@ namespace GridSystem
 		}
 
 		[Button, Group("Editor")]
-		public void ClearTile()
+		public void ClearTile(bool setupBlocker = true)
 		{
 			if (CurrentTile)
 			{
@@ -67,7 +67,8 @@ namespace GridSystem
 				CurrentTile = null;
 			}
 
-			GridManager.Instance.SetupTileBlockers();
+			if (setupBlocker)
+				GridManager.Instance.SetupTileBlockers();
 		}
 
 		public void Setup(int layerIndex, int x, int y, TileType _tileType)
