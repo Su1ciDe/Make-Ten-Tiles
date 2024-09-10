@@ -288,6 +288,7 @@ namespace GridSystem
 			}
 
 			TryToSolveRandom(randomWeights);
+			
 			SetupTileBlockers();
 		}
 
@@ -395,9 +396,9 @@ namespace GridSystem
 				{
 					var tilesLayerDown = gridCells[downLayerIndex];
 					var normalizeDiffX = tilesLayerDown.GetLength(0) - tilesLayerUp.GetLength(0);
-					var coverTwoTileX = normalizeDiffX % 2 >= 0;
+					var coverTwoTileX = normalizeDiffX % 2 > 0;
 					var normalizeDiffY = tilesLayerDown.GetLength(1) - tilesLayerUp.GetLength(1);
-					var coverTwoTileY = normalizeDiffY % 2 >= 0;
+					var coverTwoTileY = normalizeDiffY % 2 > 0;
 
 					normalizeDiffX /= 2;
 					normalizeDiffY /= 2;
