@@ -192,7 +192,7 @@ namespace GridSystem
 						cell.transform.localRotation = transform.rotation;
 						cell.gameObject.name = x + " - " + y;
 						gridCells[i, x, y] = cell;
-						
+
 						if (randomGrid[i].GetCell(x, y) == CellType.Filled)
 						{
 							var gridCell = randomizer.WeightedRandom(randomWeights).Color;
@@ -266,6 +266,46 @@ namespace GridSystem
 			SetupTileBlockers();
 		}
 
+		[Button]
+		private void ClearGrid()
+		{
+			cellHolder.DestroyImmediateChildren();
+		}
+
+		private void OnValidate()
+		{
+			var totalWeight = 0;
+			foreach (var gridSpawnerOptions in randomizer)
+			{
+				totalWeight += gridSpawnerOptions.Weight;
+			}
+
+			foreach (var gridSpawnerOption in randomizer)
+			{
+				gridSpawnerOption.Percentage = ((float)gridSpawnerOption.Weight / totalWeight * 100).ToString("F2") + "%";
+			}
+
+			if (gridCells is not null)
+			{
+				for (int i = 0; i < gridCells.GetLength(0); i++)
+				{
+					var cells = gridCells[i];
+					for (int x = 0; x < cells.GetLength(0); x++)
+					{
+						for (int y = 0; y < cells.GetLength(1); y++)
+						{
+							var gridCell = GetCell(i, x, y);
+							if (!gridCell) return;
+							if (gridCell.CurrentTile is null) continue;
+
+							SceneVisibilityManager.instance.DisablePicking(gridCell.CurrentTile.gameObject, true);
+						}
+					}
+				}
+			}
+		}
+#endif
+
 		public void SetupTileBlockers()
 		{
 			for (int layerIndex = 1; layerIndex < gridCells.GetLength(0); layerIndex++)
@@ -338,46 +378,6 @@ namespace GridSystem
 				}
 			}
 		}
-
-		[Button]
-		private void ClearGrid()
-		{
-			cellHolder.DestroyImmediateChildren();
-		}
-
-		private void OnValidate()
-		{
-			var totalWeight = 0;
-			foreach (var gridSpawnerOptions in randomizer)
-			{
-				totalWeight += gridSpawnerOptions.Weight;
-			}
-
-			foreach (var gridSpawnerOption in randomizer)
-			{
-				gridSpawnerOption.Percentage = ((float)gridSpawnerOption.Weight / totalWeight * 100).ToString("F2") + "%";
-			}
-
-			if (gridCells is not null)
-			{
-				for (int i = 0; i < gridCells.GetLength(0); i++)
-				{
-					var cells = gridCells[i];
-					for (int x = 0; x < cells.GetLength(0); x++)
-					{
-						for (int y = 0; y < cells.GetLength(1); y++)
-						{
-							var gridCell = GetCell(i, x, y);
-							if (!gridCell) return;
-							if (gridCell.CurrentTile is null) continue;
-
-							SceneVisibilityManager.instance.DisablePicking(gridCell.CurrentTile.gameObject, true);
-						}
-					}
-				}
-			}
-		}
-#endif
 
 		#endregion
 	}
