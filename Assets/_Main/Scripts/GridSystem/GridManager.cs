@@ -144,6 +144,84 @@ namespace GridSystem
 
 #if UNITY_EDITOR
 
+		[Button(ButtonSizes.Large)]
+		private void Setup()
+		{
+			ClearGrid();
+
+			sizes = new List<Vector2Int>();
+			gridCells = new GridCell3D();
+
+			// Layers
+			for (int i = 0; i < grid.Length; i++)
+			{
+				sizes.Add(grid[i].GridSize);
+				var xOffset = (nodeSize.x * sizes[i].x + xSpacing * (sizes[i].x - 1)) / 2f - nodeSize.x / 2f;
+				var yOffset = (nodeSize.y * sizes[i].y + ySpacing * (sizes[i].y - 1)) / 2f - nodeSize.y / 2f;
+
+				gridCells.Matrices.Add(new GridCell3D.GridCellMatrix(sizes[i].x, sizes[i].y));
+
+				var layer = new GameObject("Layer_" + (i + 1)).transform;
+				layer.SetParent(cellHolder);
+				layer.localPosition = new Vector3(layer.localPosition.x, i * Tile.TILE_HEIGHT, layer.localPosition.z);
+				for (int y = 0; y < sizes[i].y; y++)
+				{
+					for (int x = 0; x < sizes[i].x; x++)
+					{
+						var gridCell = grid[i].GetCell(x, y);
+
+						var cell = (GridCell)PrefabUtility.InstantiatePrefab(GameManager.Instance.PrefabsSO.GridCellPrefab, layer.transform);
+						cell.transform.localPosition = new Vector3(x * (nodeSize.x + xSpacing) - xOffset, -y * (nodeSize.y + ySpacing) + yOffset);
+						cell.transform.localRotation = transform.rotation;
+						cell.gameObject.name = x + " - " + y;
+						cell.Setup(i, x, y, gridCell);
+						gridCells[i, x, y] = cell;
+					}
+				}
+			}
+
+			SetupTileBlockers();
+		}
+
+		[Button]
+		private void ClearGrid()
+		{
+			cellHolder.DestroyImmediateChildren();
+		}
+
+		private void OnValidate()
+		{
+			var totalWeight = 0;
+			foreach (var gridSpawnerOptions in randomizer)
+			{
+				totalWeight += gridSpawnerOptions.Weight;
+			}
+
+			foreach (var gridSpawnerOption in randomizer)
+			{
+				gridSpawnerOption.Percentage = ((float)gridSpawnerOption.Weight / totalWeight * 100).ToString("F2") + "%";
+			}
+
+			if (gridCells is not null)
+			{
+				for (int i = 0; i < gridCells.GetLength(0); i++)
+				{
+					var cells = gridCells[i];
+					for (int x = 0; x < cells.GetLength(0); x++)
+					{
+						for (int y = 0; y < cells.GetLength(1); y++)
+						{
+							var gridCell = GetCell(i, x, y);
+							if (!gridCell) return;
+							if (gridCell.CurrentTile is null) continue;
+
+							SceneVisibilityManager.instance.DisablePicking(gridCell.CurrentTile.gameObject, true);
+						}
+					}
+				}
+			}
+		}
+
 		#region Randomizer
 
 		[System.Serializable]
@@ -155,8 +233,9 @@ namespace GridSystem
 			[Group("Colors"), DisplayAsString, HideLabel] public string Percentage;
 		}
 
-		// [Group("Randomizer")] [SerializeField] private List<Vector2Int> randomSizes = new List<Vector2Int>();
+		[ValidateInput(nameof(ValidateRandomizerGrid))]
 		[Group("Randomizer")] [SerializeField] private Array2DCell[] randomGrid;
+		[ValidateInput(nameof(ValidateRandomizer))]
 		[Group("Randomizer")] [SerializeField] private Randomizer[] randomizer;
 
 		[Group("Randomizer"), Button]
@@ -287,85 +366,24 @@ namespace GridSystem
 			return totalCount % 2 == 0;
 		}
 
+		private TriValidationResult ValidateRandomizer()
+		{
+			int totalCount = 0;
+			foreach (var r in randomizer)
+			{
+				totalCount += (int)r.Color;
+			}
+
+			return totalCount % 10 != 0 ? TriValidationResult.Error("Cannot be solved!") : TriValidationResult.Valid;
+		}
+
+		private TriValidationResult ValidateRandomizerGrid()
+		{
+			return CheckCanRandom() ? TriValidationResult.Valid : TriValidationResult.Error("Cannot be solved!");
+		}
+
 		#endregion
 
-		[Button(ButtonSizes.Large)]
-		private void Setup()
-		{
-			ClearGrid();
-
-			sizes = new List<Vector2Int>();
-			gridCells = new GridCell3D();
-
-			// Layers
-			for (int i = 0; i < grid.Length; i++)
-			{
-				sizes.Add(grid[i].GridSize);
-				var xOffset = (nodeSize.x * sizes[i].x + xSpacing * (sizes[i].x - 1)) / 2f - nodeSize.x / 2f;
-				var yOffset = (nodeSize.y * sizes[i].y + ySpacing * (sizes[i].y - 1)) / 2f - nodeSize.y / 2f;
-
-				gridCells.Matrices.Add(new GridCell3D.GridCellMatrix(sizes[i].x, sizes[i].y));
-
-				var layer = new GameObject("Layer_" + (i + 1)).transform;
-				layer.SetParent(cellHolder);
-				layer.localPosition = new Vector3(layer.localPosition.x, i * Tile.TILE_HEIGHT, layer.localPosition.z);
-				for (int y = 0; y < sizes[i].y; y++)
-				{
-					for (int x = 0; x < sizes[i].x; x++)
-					{
-						var gridCell = grid[i].GetCell(x, y);
-
-						var cell = (GridCell)PrefabUtility.InstantiatePrefab(GameManager.Instance.PrefabsSO.GridCellPrefab, layer.transform);
-						cell.transform.localPosition = new Vector3(x * (nodeSize.x + xSpacing) - xOffset, -y * (nodeSize.y + ySpacing) + yOffset);
-						cell.transform.localRotation = transform.rotation;
-						cell.gameObject.name = x + " - " + y;
-						cell.Setup(i, x, y, gridCell);
-						gridCells[i, x, y] = cell;
-					}
-				}
-			}
-
-			SetupTileBlockers();
-		}
-
-		[Button]
-		private void ClearGrid()
-		{
-			cellHolder.DestroyImmediateChildren();
-		}
-
-		private void OnValidate()
-		{
-			var totalWeight = 0;
-			foreach (var gridSpawnerOptions in randomizer)
-			{
-				totalWeight += gridSpawnerOptions.Weight;
-			}
-
-			foreach (var gridSpawnerOption in randomizer)
-			{
-				gridSpawnerOption.Percentage = ((float)gridSpawnerOption.Weight / totalWeight * 100).ToString("F2") + "%";
-			}
-
-			if (gridCells is not null)
-			{
-				for (int i = 0; i < gridCells.GetLength(0); i++)
-				{
-					var cells = gridCells[i];
-					for (int x = 0; x < cells.GetLength(0); x++)
-					{
-						for (int y = 0; y < cells.GetLength(1); y++)
-						{
-							var gridCell = GetCell(i, x, y);
-							if (!gridCell) return;
-							if (gridCell.CurrentTile is null) continue;
-
-							SceneVisibilityManager.instance.DisablePicking(gridCell.CurrentTile.gameObject, true);
-						}
-					}
-				}
-			}
-		}
 #endif
 
 		public void SetupTileBlockers()
