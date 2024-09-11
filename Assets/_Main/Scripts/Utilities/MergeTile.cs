@@ -44,14 +44,16 @@ namespace Utilities
 				mats[i] = GameManager.Instance.ColorsSO.Materials[tileType];
 			tileRenderer.materials = mats;
 
-			txtTen.transform.DOScale(0, .35f).From().SetEase(Ease.OutBack);
+			txtTen.transform.localScale = Vector3.zero;
+			txtTen.transform.DOScale(1, .5f).SetEase(Ease.OutBack);
 			tileHolder.DOScale(0, .25f).SetDelay(ANIMATION_DURATION).SetEase(Ease.InCirc).OnComplete(() =>
 			{
 				AudioManager.Instance.PlayAudio(AudioName.Plop1);
 
 				tileHolder.gameObject.SetActive(false);
-				txtTen.DOFade(0, 1).SetEase(Ease.InSine);
-				txtTen.transform.DOMoveY(3, 1).SetRelative(true).SetEase(Ease.OutExpo).OnComplete(() => ObjectPooler.Instance.Release(gameObject, POOL_TAG));
+				txtTen.color = mats[0].color;
+				txtTen.DOFade(0, 1).SetEase(Ease.OutCubic);
+				txtTen.transform.DOMoveY(3, 1).SetRelative(true).SetEase(Ease.OutCubic).OnComplete(() => ObjectPooler.Instance.Release(gameObject, POOL_TAG));
 			});
 		}
 
@@ -61,6 +63,7 @@ namespace Utilities
 			color.a = 1;
 			txtTen.color = color;
 			txtTen.transform.localPosition = textPosition;
+			txtTen.transform.localScale = Vector3.one;
 
 			tileHolder.gameObject.SetActive(true);
 			tileHolder.localScale = Vector3.one;

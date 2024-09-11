@@ -246,7 +246,7 @@ namespace GridSystem
 		}
 
 		[ValidateInput(nameof(ValidateRandomizerGrid))]
-		[Group("Randomizer")] [SerializeField] private Array2DCell[] randomGrid;
+		[Group("Randomizer")] [SerializeField] private Array2DCell[] randomGrids;
 		[ValidateInput(nameof(ValidateRandomizer))]
 		[Group("Randomizer")] [SerializeField] private Randomizer[] randomizer;
 
@@ -265,9 +265,9 @@ namespace GridSystem
 			sizes = new List<Vector2Int>();
 			gridCells = new GridCell3D();
 
-			for (int i = 0; i < randomGrid.Length; i++)
+			for (int i = 0; i < randomGrids.Length; i++)
 			{
-				sizes.Add(randomGrid[i].GridSize);
+				sizes.Add(randomGrids[i].GridSize);
 				var xOffset = (nodeSize.x * sizes[i].x + xSpacing * (sizes[i].x - 1)) / 2f - nodeSize.x / 2f;
 				var yOffset = (nodeSize.y * sizes[i].y + ySpacing * (sizes[i].y - 1)) / 2f - nodeSize.y / 2f;
 
@@ -286,7 +286,7 @@ namespace GridSystem
 						cell.gameObject.name = x + " - " + y;
 						gridCells[i, x, y] = cell;
 
-						if (randomGrid[i].GetCell(x, y) == CellType.Filled)
+						if (randomGrids[i].GetCell(x, y) == CellType.Filled)
 						{
 							var tileType = randomizer.WeightedRandom(randomWeights).Color;
 							cell.Setup(i, x, y, tileType);
@@ -364,7 +364,7 @@ namespace GridSystem
 		private bool CheckCanRandom()
 		{
 			var totalCount = 0;
-			foreach (var array2DCell in randomGrid)
+			foreach (var array2DCell in randomGrids)
 			{
 				for (int x = 0; x < array2DCell.GridSize.x; x++)
 				{
