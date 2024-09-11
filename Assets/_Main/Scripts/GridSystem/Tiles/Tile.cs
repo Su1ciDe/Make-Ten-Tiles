@@ -1,5 +1,7 @@
 using DG.Tweening;
+using Fiber.AudioSystem;
 using Fiber.Managers;
+using Lofelt.NiceVibrations;
 using Obstacles;
 using TMPro;
 using TriInspector;
@@ -75,10 +77,11 @@ namespace GridSystem.Tiles
 			return transform.DOLocalJump(pos, transform.position.y / 2f + JUMP_POWER, 1, JUMP_DURATION);
 		}
 
-		public Tween Blast()
+		public void Blast()
 		{
-			transform.DOShakeRotation(BLAST_DURATION, 4 * Vector3.forward, 25, 2, false, ShakeRandomnessMode.Harmonic).SetEase(Ease.InQuart).OnComplete(() => Destroy(gameObject));
-			return transform.DOScale(1.3f, BLAST_DURATION).SetEase(Ease.OutSine);
+			Destroy(gameObject);
+			// transform.DOShakeRotation(BLAST_DURATION, 4 * Vector3.forward, 25, 2, false, ShakeRandomnessMode.Harmonic).SetEase(Ease.InQuart).OnComplete(() => Destroy(gameObject));
+			// return transform.DOScale(1.3f, BLAST_DURATION).SetEase(Ease.OutSine);
 		}
 
 		private void Highlight()
@@ -147,6 +150,12 @@ namespace GridSystem.Tiles
 			if (!Obstacle)
 			{
 				Highlight();
+
+				HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.RigidImpact);
+			}
+			else
+			{
+				HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.Warning);
 			}
 		}
 
@@ -168,7 +177,7 @@ namespace GridSystem.Tiles
 					return;
 				}
 
-				RemoveTile();
+				MoveTileToHolder();
 
 				CurrentTile = null;
 			}
@@ -185,8 +194,10 @@ namespace GridSystem.Tiles
 
 		#endregion
 
-		public void RemoveTile()
+		public void MoveTileToHolder()
 		{
+			AudioManager.Instance.PlayAudio(AudioName.Pop1);
+
 			IsInDeck = true;
 			SetInteractable(false);
 

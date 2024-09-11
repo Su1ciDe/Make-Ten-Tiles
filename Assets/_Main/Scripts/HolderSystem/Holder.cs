@@ -6,6 +6,7 @@ using Fiber.Utilities;
 using GridSystem;
 using GridSystem.Tiles;
 using UnityEngine;
+using Utilities;
 
 namespace HolderSystem
 {
@@ -96,17 +97,23 @@ namespace HolderSystem
 			tileInDeck.IsCompleted = true;
 			tile.IsCompleted = true;
 			tile.transform.SetParent(tenGroup.transform);
-			tile.Jump(1 * Vector3.up).OnComplete(() =>
-			{
-				tileInDeck.Blast();
-				tile.Blast().OnComplete(() =>
-				{
-					holderGroups.Remove(tenGroup);
-					holderGroupPool.Enqueue(tenGroup);
-					tenGroup.gameObject.SetActive(false);
-					RearrangeGroups();
-				});
-			});
+			tile.Jump(1 * Vector3.up).OnComplete(() => StartCoroutine(BlastCoroutine(tile, tileInDeck, tenGroup)));
+		}
+
+		private IEnumerator BlastCoroutine(Tile tile, Tile tileInDeck, HolderGroup tenGroup)
+		{
+			var pos = (tile.transform.position + tileInDeck.transform.position) / 2f;
+			ObjectPooler.Instance.Spawn("MergeTile", pos).GetComponent<MergeTile>().Blast(tile.Type);
+
+			tileInDeck.Blast();
+			tile.Blast();
+
+			yield return waitBlast;
+
+			holderGroups.Remove(tenGroup);
+			holderGroupPool.Enqueue(tenGroup);
+			tenGroup.gameObject.SetActive(false);
+			RearrangeGroups();
 		}
 
 		public void RearrangeGroups()

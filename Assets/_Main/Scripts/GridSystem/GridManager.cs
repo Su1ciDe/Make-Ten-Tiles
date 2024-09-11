@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Fiber.Managers;
 using Fiber.Utilities;
 using Fiber.Utilities.Extensions;
+using GamePlay.Player;
 using GridSystem.Tiles;
 using Obstacles;
 using TriInspector;
@@ -46,6 +48,8 @@ namespace GridSystem
 		private void Start()
 		{
 			transform.position = new Vector3(transform.position.x, transform.position.y, GridCells.GetLength(0) * Tile.TILE_HEIGHT);
+			Player.Instance.CanInput = false;
+			transform.DOMoveX(15, .35f).From().SetEase(Ease.OutBack).OnComplete(() => Player.Instance.CanInput = true);
 		}
 
 		private void OnEnable()
@@ -220,7 +224,10 @@ namespace GridSystem
 							if (!gridCell) return;
 							if (gridCell.CurrentTile is null) continue;
 
-							SceneVisibilityManager.instance.DisablePicking(gridCell.CurrentTile.gameObject, true);
+							if (!Application.isPlaying)
+							{
+								SceneVisibilityManager.instance.DisablePicking(gridCell.CurrentTile.gameObject, true);
+							}
 						}
 					}
 				}

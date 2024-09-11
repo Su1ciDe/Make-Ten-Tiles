@@ -33,8 +33,8 @@ namespace Obstacles
 			await UniTask.WaitForSeconds(1);
 			
 			DestroyObstacle();
-			AttachedTile.RemoveTile();
-			OtherAttachedTile.RemoveTile();
+			AttachedTile.MoveTileToHolder();
+			OtherAttachedTile.MoveTileToHolder();
 		}
 	}
 }
