@@ -27,7 +27,7 @@ namespace HolderSystem
 
 		private void Start()
 		{
-			transform.position = new Vector3(transform.position.x, transform.position.y, -GridManager.Instance.GridCells.GetLength(0) * Tile.TILE_HEIGHT);
+			// transform.position = new Vector3(transform.position.x, transform.position.y, -GridManager.Instance.GridCells.GetLength(0) * Tile.TILE_HEIGHT);
 		}
 
 		private void OnEnable()

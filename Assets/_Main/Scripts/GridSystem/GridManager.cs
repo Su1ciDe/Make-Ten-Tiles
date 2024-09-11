@@ -43,6 +43,11 @@ namespace GridSystem
 			totalTileCount = gridCells.GetTileCount();
 		}
 
+		private void Start()
+		{
+			transform.position = new Vector3(transform.position.x, transform.position.y, GridCells.GetLength(0) * Tile.TILE_HEIGHT);
+		}
+
 		private void OnEnable()
 		{
 			Tile.OnTappedToTile += OnTappedToTile;
@@ -389,7 +394,6 @@ namespace GridSystem
 
 		public void SetupTileBlockers()
 		{
-			Debug.Log("VAR");
 			for (int layerIndex = 1; layerIndex < gridCells.GetLength(0); layerIndex++)
 			{
 				var tilesLayerUp = gridCells[layerIndex];
