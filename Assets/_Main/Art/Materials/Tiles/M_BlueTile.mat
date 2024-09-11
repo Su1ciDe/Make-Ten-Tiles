@@ -15,6 +15,7 @@ Material:
   - TCP2_REFLECTIONS_FRESNEL
   - TCP2_RIM_LIGHTING_LIGHTMASK
   - TCP2_SHADOW_LIGHT_COLOR
+  - TCP2_SPECULAR
   m_InvalidKeywords:
   - TCP2_UV_NORMALS_FULL
   m_LightmapFlags: 4
@@ -28,7 +29,14 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _RampSmoothing: 0.41
+    - _RampThreshold: 0.148
+    - _SpecularRoughness: 0.94
+    - _UseRim: 0
+    - _UseSpecular: 1
     m_Colors:
-    - _BaseColor: {r: 0, g: 0.43351838, b: 0.8773585, a: 1}
+    - _BaseColor: {r: 0.29214135, g: 0.8081341, b: 0.9528302, a: 1}
+    - _HColor: {r: 0.16037738, g: 0.16037738, b: 0.16037738, a: 1}
+    - _SColor: {r: 0.35644355, g: 0.66493535, b: 0.8490566, a: 1}
   m_BuildTextureStacks: []
