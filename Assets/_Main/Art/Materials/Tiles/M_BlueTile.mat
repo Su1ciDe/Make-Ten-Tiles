@@ -36,7 +36,7 @@ Material:
     - _UseRim: 0
     - _UseSpecular: 1
     m_Colors:
-    - _BaseColor: {r: 0.051886797, g: 0.7912489, b: 1, a: 1}
-    - _HColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SColor: {r: 0, g: 0.63304996, b: 1, a: 1}
+    - _BaseColor: {r: 0.29214135, g: 0.8081341, b: 0.9528302, a: 1}
+    - _HColor: {r: 0.16037738, g: 0.16037738, b: 0.16037738, a: 1}
+    - _SColor: {r: 0.35644355, g: 0.66493535, b: 0.8490566, a: 1}
   m_BuildTextureStacks: []
