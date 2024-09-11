@@ -113,6 +113,9 @@ namespace HolderSystem
 			holderGroups.Remove(tenGroup);
 			holderGroupPool.Enqueue(tenGroup);
 			tenGroup.gameObject.SetActive(false);
+
+			yield return new WaitForSeconds(0.5f);
+
 			RearrangeGroups();
 		}
 

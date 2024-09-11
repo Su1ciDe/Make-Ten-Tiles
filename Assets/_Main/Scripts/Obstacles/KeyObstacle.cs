@@ -1,5 +1,8 @@
+using DG.Tweening;
+using Fiber.Managers;
 using GridSystem;
 using GridSystem.Tiles;
+using Lofelt.NiceVibrations;
 using UnityEngine;
 
 namespace Obstacles
@@ -8,19 +11,33 @@ namespace Obstacles
 	{
 		public override bool IsBlockingMovement { get; } = false;
 
+		[SerializeField] private float unlockMoveDuration = 0.5f;
+
 		private void Awake()
 		{
 			AttachedTile.OnTileRemoved += OnTileRemoved;
+		}
+
+		private void OnDestroy()
+		{
+			transform.DOKill();
 		}
 
 		private void OnTileRemoved(Tile tile)
 		{
 			AttachedTile.OnTileRemoved -= OnTileRemoved;
 
+			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.RigidImpact);
+
 			var cage = GridManager.Instance.FindObstacle<CageObstacle>();
 			if (cage)
 			{
-				cage.Unlock(this);
+				transform.SetParent(LevelManager.Instance.CurrentLevel.transform);
+				transform.DOMove(cage.transform.position, unlockMoveDuration).SetEase(Ease.InOutQuart).OnComplete(() =>
+				{
+					cage.Unlock(this);
+					DestroyObstacle();
+				});
 			}
 		}
 

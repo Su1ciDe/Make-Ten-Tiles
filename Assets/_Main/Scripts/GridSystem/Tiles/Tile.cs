@@ -61,14 +61,19 @@ namespace GridSystem.Tiles
 			txtAmount.SetText(((int)tileType).ToString());
 			CurrentCell = cell;
 			CurrentCell.CurrentTile = this;
+
+			SetupMaterials();
 		}
 
 		private void SetupMaterials()
 		{
-			var mats = renderer.materials;
+			var mats = Application.isPlaying ? renderer.materials : renderer.sharedMaterials;
 			for (var i = 0; i < mats.Length; i++)
 				mats[i] = GameManager.Instance.ColorsSO.Materials[Type];
-			renderer.materials = mats;
+			if (Application.isPlaying)
+				renderer.materials = mats;
+			else
+				renderer.sharedMaterials = mats;
 		}
 
 		public Tween Jump(Vector3 pos)
@@ -110,6 +115,11 @@ namespace GridSystem.Tiles
 			}
 		}
 
+		public void ResetBlockers()
+		{
+			LayerBlockCount = 0;
+		}
+
 		private void OnBlockerRemoved(Tile blockerTile)
 		{
 			blockerTile.OnTileRemoved -= OnBlockerRemoved;
@@ -145,6 +155,8 @@ namespace GridSystem.Tiles
 
 		public void OnPointerDown(PointerEventData eventData)
 		{
+			if (IsInDeck) return;
+
 			CurrentTile = this;
 
 			if (!Obstacle)
@@ -153,14 +165,12 @@ namespace GridSystem.Tiles
 
 				HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.RigidImpact);
 			}
-			else
-			{
-				HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.Warning);
-			}
 		}
 
 		public void OnPointerUp(PointerEventData eventData)
 		{
+			if (IsInDeck) return;
+
 			if (!CurrentTile) return;
 			if (eventData.pointerEnter && !eventData.pointerEnter.Equals(CurrentTile.gameObject))
 			{

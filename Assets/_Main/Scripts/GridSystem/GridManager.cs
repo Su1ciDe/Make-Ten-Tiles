@@ -401,6 +401,9 @@ namespace GridSystem
 
 		public void SetupTileBlockers()
 		{
+			if (!Application.isPlaying)
+				ResetTileBlockers();
+
 			for (int layerIndex = 1; layerIndex < gridCells.GetLength(0); layerIndex++)
 			{
 				var tilesLayerUp = gridCells[layerIndex];
@@ -467,6 +470,22 @@ namespace GridSystem
 								cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile);
 							}
 						}
+					}
+				}
+			}
+		}
+
+		private void ResetTileBlockers()
+		{
+			for (int i = 0; i < gridCells.GetLength(0); i++)
+			{
+				for (int x = 0; x < gridCells[i].GetLength(0); x++)
+				{
+					for (int y = 0; y < gridCells[i].GetLength(1); y++)
+					{
+						var cell = gridCells[i, x, y];
+						if (cell.CurrentTile)
+							cell.CurrentTile.ResetBlockers();
 					}
 				}
 			}

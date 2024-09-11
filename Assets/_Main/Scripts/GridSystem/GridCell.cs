@@ -29,7 +29,7 @@ namespace GridSystem
 
 		[Group("Editor/Obstacles")] [SerializeField] private bool hasObstacle;
 		[Group("Editor/Obstacles"), Dropdown(nameof(GetObstacles))] [SerializeField] private BaseObstacle obstacle;
-		[Group("Editor/Obstacles"), ShowIf(nameof(IsGlueObstacle))] [SerializeField] private GridCell gluedCell;
+		[Group("Editor/Obstacles"), ShowIf(nameof(IsZipperObstacle))] [SerializeField] private GridCell gluedCell;
 
 		[Button(ButtonSizes.Medium), Group("Editor")]
 		private void SetupTile()
@@ -48,9 +48,9 @@ namespace GridSystem
 				CurrentTile.SetupObstacle(obstacle);
 
 				// If the obstacle is a GlueObstacle
-				if (IsGlueObstacle() && gluedCell.CurrentTile)
+				if (IsZipperObstacle() && gluedCell.CurrentTile)
 				{
-					var glueObstacle = (GlueObstacle)CurrentTile.Obstacle;
+					var glueObstacle = (ZipperObstacle)CurrentTile.Obstacle;
 					glueObstacle.Setup(CurrentTile, gluedCell.CurrentTile);
 				}
 			}
@@ -94,7 +94,7 @@ namespace GridSystem
 			return obstacles;
 		}
 
-		private bool IsGlueObstacle() => obstacle is GlueObstacle;
+		private bool IsZipperObstacle() => obstacle is ZipperObstacle;
 
 		private void OnDrawGizmos()
 		{

@@ -50,8 +50,8 @@ namespace Utilities
 				AudioManager.Instance.PlayAudio(AudioName.Plop1);
 
 				tileHolder.gameObject.SetActive(false);
-				txtTen.DOFade(0, 1).SetEase(Ease.OutExpo);
-				txtTen.transform.DOMoveY(2f, 1).SetRelative(true).SetEase(Ease.OutExpo).OnComplete(() => ObjectPooler.Instance.Release(gameObject, POOL_TAG));
+				txtTen.DOFade(0, 1).SetEase(Ease.InSine);
+				txtTen.transform.DOMoveY(3, 1).SetRelative(true).SetEase(Ease.OutExpo).OnComplete(() => ObjectPooler.Instance.Release(gameObject, POOL_TAG));
 			});
 		}
 

@@ -1,11 +1,13 @@
 using Cysharp.Threading.Tasks;
+using Fiber.Managers;
 using GridSystem.Tiles;
+using Lofelt.NiceVibrations;
 using TriInspector;
 using UnityEngine;
 
 namespace Obstacles
 {
-	public class GlueObstacle : BaseObstacle
+	public class ZipperObstacle : BaseObstacle
 	{
 		[field: SerializeField, ReadOnly, Group("Properties")] public Tile OtherAttachedTile { get; set; }
 		public override bool IsBlockingMovement { get; } = true;
@@ -23,6 +25,8 @@ namespace Obstacles
 
 		public override bool OnTapped()
 		{
+			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.RigidImpact);
+
 			GlueAnimation();
 
 			return !IsBlockingMovement;
@@ -30,8 +34,11 @@ namespace Obstacles
 
 		private async void GlueAnimation()
 		{
+			AttachedTile.IsInDeck = true;
+			OtherAttachedTile.IsInDeck = true;
+
 			await UniTask.WaitForSeconds(1);
-			
+
 			DestroyObstacle();
 			AttachedTile.MoveTileToHolder();
 			OtherAttachedTile.MoveTileToHolder();

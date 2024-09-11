@@ -1,3 +1,6 @@
+using DG.Tweening;
+using Fiber.Managers;
+using Lofelt.NiceVibrations;
 using UnityEngine;
 
 namespace Obstacles
@@ -6,15 +9,22 @@ namespace Obstacles
 	{
 		public override bool IsBlockingMovement { get; } = true;
 
+		[SerializeField] private float unlockMoveDuration = 0.25f;
+
 		public override bool OnTapped()
 		{
+			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.Warning);
+
+			AttachedTile.SetInteractable(false);
+			AttachedTile.transform.DOKill();
+			AttachedTile.transform.DOShakeRotation(.25f, 5 * Vector3.up, 25, 2, false, ShakeRandomnessMode.Harmonic).SetEase(Ease.InQuart).OnComplete(() => AttachedTile.SetInteractable(true));
+
 			return !IsBlockingMovement;
 		}
 
 		public void Unlock(KeyObstacle key)
 		{
-			// TODO: unlock animation
-			DestroyObstacle();
+			transform.DOScale(0, unlockMoveDuration).SetEase(Ease.InBack).OnComplete(DestroyObstacle);
 		}
 	}
 }
