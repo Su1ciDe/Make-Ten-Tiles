@@ -43,6 +43,11 @@ namespace GridSystem.Tiles
 		public static event UnityAction<Tile> OnTappedToTile;
 		public event UnityAction<Tile> OnTileRemoved;
 
+		private void Awake()
+		{
+			SetupMaterials();
+		}
+
 		private void OnDestroy()
 		{
 			transform.DOKill();
@@ -54,8 +59,14 @@ namespace GridSystem.Tiles
 			txtAmount.SetText(((int)tileType).ToString());
 			CurrentCell = cell;
 			CurrentCell.CurrentTile = this;
+		}
 
-			renderer.material = GameManager.Instance.ColorsSO.Materials[Type];
+		private void SetupMaterials()
+		{
+			var mats = renderer.materials;
+			for (var i = 0; i < mats.Length; i++)
+				mats[i] = GameManager.Instance.ColorsSO.Materials[Type];
+			renderer.materials = mats;
 		}
 
 		public Tween Jump(Vector3 pos)

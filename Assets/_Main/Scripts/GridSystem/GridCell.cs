@@ -59,7 +59,7 @@ namespace GridSystem
 		}
 
 		[Button, Group("Editor")]
-		private void ClearTile()
+		public void ClearTile(bool setupBlocker = true)
 		{
 			if (CurrentTile)
 			{
@@ -67,20 +67,21 @@ namespace GridSystem
 				CurrentTile = null;
 			}
 
-			GridManager.Instance.SetupTileBlockers();
+			if (setupBlocker)
+				GridManager.Instance.SetupTileBlockers();
 		}
 
-		public void Setup(int layerIndex, int x, int y, TileType tileType)
+		public void Setup(int layerIndex, int x, int y, TileType _tileType)
 		{
 			LayerIndex = layerIndex;
 			Coordinates = new Vector2Int(x, y);
-			this.tileType = tileType;
+			this.tileType = _tileType;
 
-			if (tileType != TileType.Empty)
+			if (_tileType != TileType.Empty)
 			{
 				var tile = (Tile)PrefabUtility.InstantiatePrefab(GameManager.Instance.PrefabsSO.TilePrefab, tileHolder);
 				tile.transform.localPosition = Vector3.zero;
-				tile.Setup(tileType, this);
+				tile.Setup(_tileType, this);
 
 				SceneVisibilityManager.instance.DisablePicking(tile.gameObject, true);
 			}

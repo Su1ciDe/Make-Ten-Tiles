@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Fiber.Managers;
 using Fiber.Utilities;
@@ -23,8 +20,6 @@ namespace HolderSystem
 
 		private readonly WaitForSeconds waitBlast = new WaitForSeconds(Tile.BLAST_DURATION);
 
-		private CancellationTokenSource token = new CancellationTokenSource();
-
 		private void Awake()
 		{
 			Setup();
@@ -32,7 +27,7 @@ namespace HolderSystem
 
 		private void Start()
 		{
-			transform.position = new Vector3(transform.position.x, transform.position.y, -GridManager.Instance.GridCells.GetLength(0) * Tile.TILE_HEIGHT);
+			// transform.position = new Vector3(transform.position.x, transform.position.y, -GridManager.Instance.GridCells.GetLength(0) * Tile.TILE_HEIGHT);
 		}
 
 		private void OnEnable()
@@ -43,7 +38,6 @@ namespace HolderSystem
 		private void OnDisable()
 		{
 			Tile.OnTappedToTile -= AddTileToDeck;
-			token.Dispose();
 		}
 
 		private void Setup()
@@ -80,16 +74,11 @@ namespace HolderSystem
 			{
 				if (!holderGroupPool.TryDequeue(out var newGroup)) return;
 
-				token.Cancel();
-
 				newGroup.gameObject.SetActive(true);
 				var tileCount = GetTotalTileCount();
 				newGroup.Setup(holderSlots[tileCount]);
 				newGroup.AddTile(tile);
 				holderGroups.Add(newGroup);
-
-				//TODO: wait for blast
-				// Check if the holder is full and lose the game
 			}
 
 			if (checkFailCoroutine is not null)

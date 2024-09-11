@@ -43,6 +43,11 @@ namespace GridSystem
 			totalTileCount = gridCells.GetTileCount();
 		}
 
+		private void Start()
+		{
+			transform.position = new Vector3(transform.position.x, transform.position.y, GridCells.GetLength(0) * Tile.TILE_HEIGHT);
+		}
+
 		private void OnEnable()
 		{
 			Tile.OnTappedToTile += OnTappedToTile;
@@ -144,89 +149,6 @@ namespace GridSystem
 
 #if UNITY_EDITOR
 
-		[System.Serializable]
-		[DeclareHorizontalGroup("Colors")]
-		private class Randomizer
-		{
-			[Group("Colors")] public TileType Color;
-			[Group("Colors")] public int Weight = 1;
-			[Group("Colors"), DisplayAsString, HideLabel] public string Percentage;
-		}
-
-		// [Group("Randomizer")] [SerializeField] private List<Vector2Int> randomSizes = new List<Vector2Int>();
-		[Group("Randomizer")] [SerializeField] private Array2DCell[] randomGrid;
-		[Group("Randomizer")] [SerializeField] private Randomizer[] randomizer;
-
-		[Group("Randomizer"), Button]
-		private void Randomize()
-		{
-			if (!CheckCanRandom())
-			{
-				Debug.Log("Not enough cells to complete level!");
-				return;
-			}
-
-			ClearGrid();
-			var randomWeights = randomizer.Select(x => x.Weight).ToArray();
-
-			sizes = new List<Vector2Int>();
-			gridCells = new GridCell3D();
-
-			for (int i = 0; i < randomGrid.Length; i++)
-			{
-				sizes.Add(randomGrid[i].GridSize);
-				var xOffset = (nodeSize.x * sizes[i].x + xSpacing * (sizes[i].x - 1)) / 2f - nodeSize.x / 2f;
-				var yOffset = (nodeSize.y * sizes[i].y + ySpacing * (sizes[i].y - 1)) / 2f - nodeSize.y / 2f;
-
-				gridCells.Matrices.Add(new GridCell3D.GridCellMatrix(sizes[i].x, sizes[i].y));
-
-				var layer = new GameObject("Layer_" + (i + 1)).transform;
-				layer.SetParent(cellHolder);
-				layer.localPosition = new Vector3(layer.localPosition.x, i * Tile.TILE_HEIGHT, layer.localPosition.z);
-				for (int y = 0; y < sizes[i].y; y++)
-				{
-					for (int x = 0; x < sizes[i].x; x++)
-					{
-						var cell = (GridCell)PrefabUtility.InstantiatePrefab(GameManager.Instance.PrefabsSO.GridCellPrefab, layer.transform);
-						cell.transform.localPosition = new Vector3(x * (nodeSize.x + xSpacing) - xOffset, -y * (nodeSize.y + ySpacing) + yOffset);
-						cell.transform.localRotation = transform.rotation;
-						cell.gameObject.name = x + " - " + y;
-						gridCells[i, x, y] = cell;
-
-						if (randomGrid[i].GetCell(x, y) == CellType.Filled)
-						{
-							var gridCell = randomizer.WeightedRandom(randomWeights).Color;
-							cell.Setup(i, x, y, gridCell);
-						}
-						else
-						{
-							cell.Setup(i, x, y, TileType.Empty);
-						}
-					}
-				}
-			}
-
-			SetupTileBlockers();
-		}
-
-		private bool CheckCanRandom()
-		{
-			var totalCount = 0;
-			foreach (var array2DCell in randomGrid)
-			{
-				for (int x = 0; x < array2DCell.GridSize.x; x++)
-				{
-					for (int y = 0; y < array2DCell.GridSize.y; y++)
-					{
-						if (array2DCell.GetCell(x, y) != CellType.Empty)
-							totalCount++;
-					}
-				}
-			}
-
-			return totalCount % 2 == 0;
-		}
-
 		[Button(ButtonSizes.Large)]
 		private void Setup()
 		{
@@ -304,6 +226,170 @@ namespace GridSystem
 				}
 			}
 		}
+
+		#region Randomizer
+
+		[System.Serializable]
+		[DeclareHorizontalGroup("Colors")]
+		private class Randomizer
+		{
+			[Group("Colors")] public TileType Color;
+			[Group("Colors")] public int Weight = 1;
+			[Group("Colors"), DisplayAsString, HideLabel] public string Percentage;
+		}
+
+		[ValidateInput(nameof(ValidateRandomizerGrid))]
+		[Group("Randomizer")] [SerializeField] private Array2DCell[] randomGrid;
+		[ValidateInput(nameof(ValidateRandomizer))]
+		[Group("Randomizer")] [SerializeField] private Randomizer[] randomizer;
+
+		[Group("Randomizer"), Button]
+		private void Randomize()
+		{
+			if (!CheckCanRandom())
+			{
+				Debug.Log("Not enough cells to complete level!");
+				return;
+			}
+
+			ClearGrid();
+			var randomWeights = randomizer.Select(x => x.Weight).ToArray();
+
+			sizes = new List<Vector2Int>();
+			gridCells = new GridCell3D();
+
+			for (int i = 0; i < randomGrid.Length; i++)
+			{
+				sizes.Add(randomGrid[i].GridSize);
+				var xOffset = (nodeSize.x * sizes[i].x + xSpacing * (sizes[i].x - 1)) / 2f - nodeSize.x / 2f;
+				var yOffset = (nodeSize.y * sizes[i].y + ySpacing * (sizes[i].y - 1)) / 2f - nodeSize.y / 2f;
+
+				gridCells.Matrices.Add(new GridCell3D.GridCellMatrix(sizes[i].x, sizes[i].y));
+
+				var layer = new GameObject("Layer_" + (i + 1)).transform;
+				layer.SetParent(cellHolder);
+				layer.localPosition = new Vector3(layer.localPosition.x, i * Tile.TILE_HEIGHT, layer.localPosition.z);
+				for (int y = 0; y < sizes[i].y; y++)
+				{
+					for (int x = 0; x < sizes[i].x; x++)
+					{
+						var cell = (GridCell)PrefabUtility.InstantiatePrefab(GameManager.Instance.PrefabsSO.GridCellPrefab, layer.transform);
+						cell.transform.localPosition = new Vector3(x * (nodeSize.x + xSpacing) - xOffset, -y * (nodeSize.y + ySpacing) + yOffset);
+						cell.transform.localRotation = transform.rotation;
+						cell.gameObject.name = x + " - " + y;
+						gridCells[i, x, y] = cell;
+
+						if (randomGrid[i].GetCell(x, y) == CellType.Filled)
+						{
+							var tileType = randomizer.WeightedRandom(randomWeights).Color;
+							cell.Setup(i, x, y, tileType);
+						}
+						else
+						{
+							cell.Setup(i, x, y, TileType.Empty);
+						}
+					}
+				}
+			}
+
+			TryToSolveRandom(randomWeights);
+
+			SetupTileBlockers();
+		}
+
+		private void TryToSolveRandom(int[] randomWeights)
+		{
+			var dict = new Dictionary<(int i, int x, int y), (int i, int x, int y)>();
+
+			for (int i = gridCells.GetLength(0) - 1; i >= 0; i--)
+			{
+				for (int x = 0; x < gridCells[i].GetLength(0); x++)
+				{
+					for (int y = 0; y < gridCells[i].GetLength(1); y++)
+					{
+						if (!gridCells[i, x, y].CurrentTile) continue;
+						if (dict.ContainsKey((i, x, y))) continue;
+						if (dict.ContainsValue((i, x, y))) continue;
+
+						dict.Add((i, x, y), GetTen(gridCells[i, x, y].CurrentTile));
+					}
+				}
+			}
+
+			var notTens = dict.Where(x => x.Value == (-1, -1, -1)).Select(x => x.Key);
+			var notTensCoordinates = notTens as (int i, int x, int y)[] ?? notTens.ToArray();
+			foreach (var (i, x, y) in notTensCoordinates)
+			{
+				var cell = gridCells[i, x, y];
+				var tileType = randomizer.WeightedRandom(randomWeights).Color;
+				cell.ClearTile(false);
+				cell.Setup(i, x, y, tileType);
+			}
+
+			if (notTensCoordinates.Any())
+			{
+				TryToSolveRandom(randomWeights);
+			}
+
+			return;
+
+			(int i, int x, int y) GetTen(Tile tile)
+			{
+				for (int i = gridCells.GetLength(0) - 1; i >= 0; i--)
+				{
+					for (int x = 0; x < gridCells[i].GetLength(0); x++)
+					{
+						for (int y = 0; y < gridCells[i].GetLength(1); y++)
+						{
+							if (!gridCells[i, x, y].CurrentTile) continue;
+							if (gridCells[i, x, y].CurrentTile.Equals(tile)) continue;
+
+							if ((int)tile.Type + (int)gridCells[i, x, y].CurrentTile.Type == GameManager.BLAST_COUNT && !dict.ContainsValue((i, x, y)) && !dict.ContainsKey((i, x, y)))
+								return (i, x, y);
+						}
+					}
+				}
+
+				return (-1, -1, -1);
+			}
+		}
+
+		private bool CheckCanRandom()
+		{
+			var totalCount = 0;
+			foreach (var array2DCell in randomGrid)
+			{
+				for (int x = 0; x < array2DCell.GridSize.x; x++)
+				{
+					for (int y = 0; y < array2DCell.GridSize.y; y++)
+					{
+						if (array2DCell.GetCell(x, y) != CellType.Empty)
+							totalCount++;
+					}
+				}
+			}
+
+			return totalCount % 2 == 0;
+		}
+
+		private TriValidationResult ValidateRandomizer()
+		{
+			int totalCount = 0;
+			foreach (var r in randomizer)
+			{
+				totalCount += (int)r.Color;
+			}
+
+			return totalCount % 10 != 0 ? TriValidationResult.Error("Cannot be solved!") : TriValidationResult.Valid;
+		}
+
+		private TriValidationResult ValidateRandomizerGrid()
+		{
+			return CheckCanRandom() ? TriValidationResult.Valid : TriValidationResult.Error("Cannot be solved!");
+		}
+
+		#endregion
+
 #endif
 
 		public void SetupTileBlockers()
@@ -315,9 +401,9 @@ namespace GridSystem
 				{
 					var tilesLayerDown = gridCells[downLayerIndex];
 					var normalizeDiffX = tilesLayerDown.GetLength(0) - tilesLayerUp.GetLength(0);
-					var coverTwoTileX = normalizeDiffX % 2 >= 0;
+					var coverTwoTileX = normalizeDiffX % 2 > 0;
 					var normalizeDiffY = tilesLayerDown.GetLength(1) - tilesLayerUp.GetLength(1);
-					var coverTwoTileY = normalizeDiffY % 2 >= 0;
+					var coverTwoTileY = normalizeDiffY % 2 > 0;
 
 					normalizeDiffX /= 2;
 					normalizeDiffY /= 2;
