@@ -27,6 +27,7 @@ namespace Utilities
 		{
 			txtTen.SetText(GameManager.BLAST_COUNT.ToString());
 			textPosition = txtTen.transform.localPosition;
+			positionConstraint.constraintActive = false;
 		}
 
 		private void OnDisable()
@@ -65,6 +66,10 @@ namespace Utilities
 
 		private void ResetTile()
 		{
+			tileHolder.DOKill();
+			txtTen.DOKill();
+			txtTen.transform.DOKill();
+
 			txtTen.color = Color.white;
 			txtTen.transform.localPosition = textPosition;
 			txtTen.transform.localScale = Vector3.one;
@@ -72,7 +77,8 @@ namespace Utilities
 			tileHolder.gameObject.SetActive(true);
 			tileHolder.localScale = Vector3.one;
 
-			positionConstraint.RemoveSource(0);
+			if (positionConstraint.sourceCount > 0)
+				positionConstraint.RemoveSource(0);
 		}
 
 		private void AddConstraint(Transform t)

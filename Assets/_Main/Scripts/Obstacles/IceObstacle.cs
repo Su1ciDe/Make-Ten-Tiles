@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Fiber.Managers;
 using GridSystem.Tiles;
@@ -12,7 +13,9 @@ namespace Obstacles
 	{
 		public override bool IsBlockingMovement { get; } = true;
 
-		// [field: SerializeField, ReadOnly, Group("Properties")] public int ASD { get; private set; }
+		[SerializeField] private Rigidbody[] fractures;
+		[SerializeField] private float explosionForce;
+		[SerializeField] private float explosionRadius;
 
 		private int currentHealth;
 
@@ -31,14 +34,25 @@ namespace Obstacles
 
 		private void OnAnyTileTapped(Tile tile)
 		{
-			if (AttachedTile?.LayerBlockCount <= 0)
-			{
-				currentHealth--;
+			if (!(AttachedTile?.LayerBlockCount <= 0)) return;
 
-				if (currentHealth <= 0)
-				{
-					DestroyObstacle();
-				}
+			currentHealth--;
+
+			if (currentHealth <= 0)
+				DestroyObstacle();
+
+			DestroyFractures();
+		}
+
+		private void DestroyFractures()
+		{
+			const int count = 2;
+			for (int i = (HEALTH - currentHealth - 1) * count; i < (HEALTH - currentHealth) * count; i++)
+			{
+				var fracture = fractures[i];
+				fracture.isKinematic = false;
+				fracture.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+				fracture.transform.DOScale(0, .5f).SetDelay(0.5f).OnComplete(() => fracture.gameObject.SetActive(false));
 			}
 		}
 
@@ -53,8 +67,12 @@ namespace Obstacles
 			return !IsBlockingMovement;
 		}
 
-		public override void DestroyObstacle()
+		public override async void DestroyObstacle()
 		{
+			AttachedTile.Obstacle = null;
+
+			await UniTask.WaitForSeconds(1.1f);
+
 			//TODO: Add some visual effects
 			base.DestroyObstacle();
 		}

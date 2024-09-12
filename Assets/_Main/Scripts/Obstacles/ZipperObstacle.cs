@@ -25,6 +25,8 @@ namespace Obstacles
 
 		public override bool OnTapped()
 		{
+			if (OtherAttachedTile.LayerBlockCount > 0 || AttachedTile.LayerBlockCount > 0) return false;
+
 			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.RigidImpact);
 
 			GlueAnimation();
