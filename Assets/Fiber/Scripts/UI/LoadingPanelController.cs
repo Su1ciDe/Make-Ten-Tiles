@@ -1,20 +1,21 @@
 using DG.Tweening;
 using Fiber.Utilities;
-using TriInspector;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 namespace Fiber.UI
 {
 	public class LoadingPanelController : SingletonPersistent<LoadingPanelController>
 	{
-		[Title("General Variables")]
+		public bool IsActive { get; set; }
+
+		[Header("General Variables")]
 		[SerializeField] private float minLoadingDuration = 4f;
 		[SerializeField] private float maxLoadingDuration = 5f;
 		[SerializeField] private Ease loadingEase;
 
-		[Title("References")]
+		[Header("References")]
 		[SerializeField] private Image imgFillBar;
 		[SerializeField] private GameObject loadingPanelParent;
 		[Space]
@@ -22,10 +23,13 @@ namespace Fiber.UI
 		[SerializeField] private Image imgLoadingScreen;
 		[SerializeField] private Image imgLoadingScreenTitle;
 
-		public event UnityAction OnLoadingFinished;
+		public UnityAction OnLoadingFinished;
 
-		private void Start()
+		protected override void Awake()
 		{
+			base.Awake();
+
+			IsActive = true;
 			imgFillBar.fillAmount = 0f;
 			loadingPanelParent.SetActive(true);
 
@@ -34,6 +38,8 @@ namespace Fiber.UI
 			imgFillBar.DOFillAmount(1f, _duration).SetEase(loadingEase).SetLink(gameObject).SetTarget(gameObject).OnComplete(() =>
 			{
 				loadingPanelParent.SetActive(false);
+				IsActive = false;
+
 				OnLoadingFinished?.Invoke();
 			});
 		}

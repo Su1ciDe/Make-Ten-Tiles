@@ -34,7 +34,7 @@ namespace HolderSystem
 		public void AddTile(Tile tile)
 		{
 			tile.transform.SetParent(transform);
-			tile.Jump(new Vector3(Tiles.Count * CurrentSlot.Size, 0)).OnComplete(tile.OnTilePlaced);
+			tile.Jump(new Vector3(Tiles.Count * CurrentSlot.Size, 0)).OnComplete(tile.TilePlaced);
 			Tiles.Add(tile);
 		}
 	}

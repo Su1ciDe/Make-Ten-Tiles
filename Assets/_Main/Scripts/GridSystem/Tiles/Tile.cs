@@ -45,6 +45,7 @@ namespace GridSystem.Tiles
 
 		public static event UnityAction<Tile> OnTappedToTile;
 		public event UnityAction<Tile> OnTileRemoved;
+		public static event UnityAction<Tile> OnTilePlaced;
 
 		private void Awake()
 		{
@@ -224,9 +225,10 @@ namespace GridSystem.Tiles
 			OnTileRemoved?.Invoke(this);
 		}
 
-		public void OnTilePlaced()
+		public void TilePlaced()
 		{
 			trail.emitting = false;
+			OnTilePlaced?.Invoke(this);
 		}
 
 #if UNITY_EDITOR
