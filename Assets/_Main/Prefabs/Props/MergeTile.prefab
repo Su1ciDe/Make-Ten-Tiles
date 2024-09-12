@@ -213,6 +213,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7273323178588725848}
   - component: {fileID: 1265219945662754086}
+  - component: {fileID: 50330506032911804}
   m_Layer: 0
   m_Name: MergeTile
   m_TagString: Untagged
@@ -252,6 +253,25 @@ MonoBehaviour:
   txtTen: {fileID: 2788164204196850438}
   tileHolder: {fileID: 5335244494564921955}
   tileRenderer: {fileID: 3213252207036189826}
+  positionConstraint: {fileID: 50330506032911804}
+--- !u!1818360608 &50330506032911804
+PositionConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6821949881093097151}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0, z: 0}
+  m_TranslationOffset: {x: 0, y: 0, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_Active: 0
+  m_IsLocked: 0
+  m_Sources: []
 --- !u!1001 &5069050350294395481
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -3,8 +3,10 @@ using Fiber.AudioSystem;
 using Fiber.Managers;
 using Fiber.Utilities;
 using GridSystem;
+using HolderSystem;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Animations;
 
 namespace Utilities
 {
@@ -13,6 +15,8 @@ namespace Utilities
 		[SerializeField] private TextMeshPro txtTen;
 		[SerializeField] private Transform tileHolder;
 		[SerializeField] private Renderer tileRenderer;
+		[Space]
+		[SerializeField] private PositionConstraint positionConstraint;
 
 		private Vector3 textPosition;
 
@@ -37,8 +41,10 @@ namespace Utilities
 			txtTen.transform.DOKill();
 		}
 
-		public void Blast(TileType tileType)
+		public void Blast(TileType tileType, HolderGroup holderGroup)
 		{
+			AddConstraint(holderGroup.transform);
+
 			var mats = tileRenderer.materials;
 			for (var i = 0; i < mats.Length; i++)
 				mats[i] = GameManager.Instance.ColorsSO.Materials[tileType];
@@ -65,6 +71,15 @@ namespace Utilities
 
 			tileHolder.gameObject.SetActive(true);
 			tileHolder.localScale = Vector3.one;
+
+			positionConstraint.RemoveSource(0);
+		}
+
+		private void AddConstraint(Transform t)
+		{
+			var constraint = new ConstraintSource { weight = 1, sourceTransform = t };
+			positionConstraint.AddSource(constraint);
+			positionConstraint.constraintActive = true;
 		}
 	}
 }

@@ -26,11 +26,6 @@ namespace HolderSystem
 			Setup();
 		}
 
-		private void Start()
-		{
-			// transform.position = new Vector3(transform.position.x, transform.position.y, -GridManager.Instance.GridCells.GetLength(0) * Tile.TILE_HEIGHT);
-		}
-
 		private void OnEnable()
 		{
 			Tile.OnTappedToTile += AddTileToDeck;
@@ -104,7 +99,7 @@ namespace HolderSystem
 		{
 			var pos = (tile.transform.position + tileInDeck.transform.position) / 2f;
 			var mergeTile = ObjectPooler.Instance.Spawn("MergeTile", pos).GetComponent<MergeTile>();
-			mergeTile.Blast(tile.Type);
+			mergeTile.Blast(tile.Type, tenGroup);
 			mergeTile.transform.DOMove(tileInDeck.transform.position, 0.25f).SetEase(Ease.Linear);
 
 			tileInDeck.Blast();

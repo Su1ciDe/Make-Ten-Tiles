@@ -91,7 +91,7 @@ namespace GridSystem.Tiles
 
 		private void Highlight()
 		{
-			transform.DOKill();
+			transform.DOComplete();
 			transform.DOLocalMoveZ(HIGHLIGHT_POS, HIGHLIGHT_DURATION).SetRelative().SetEase(Ease.OutBack);
 			transform.DOScale(HIGHLIGHT_SCALE, HIGHLIGHT_DURATION).SetEase(Ease.OutBack);
 		}
