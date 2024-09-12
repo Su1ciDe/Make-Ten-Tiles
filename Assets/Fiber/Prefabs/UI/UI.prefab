@@ -757,7 +757,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &936809688563039273
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1965,7 +1965,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 94, y: -135.124}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4344159269512968892
 CanvasRenderer:
@@ -1995,8 +1995,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 256956361, guid: d14d17a3633d1482db5fba8e99a2b9f4, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: f946ef8789d8fcd45ab476642fa8bbf6, type: 3}
+  m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2286,7 +2286,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -138.3}
-  m_SizeDelta: {x: 284.2903, y: 90}
+  m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4545035322679061962
 CanvasRenderer:
@@ -2316,7 +2316,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -2069793286, guid: d14d17a3633d1482db5fba8e99a2b9f4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f4692838c4e6f9749a59e1dfb7c33ee6, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2725,10 +2725,10 @@ RectTransform:
   - {fileID: 936809688563039273}
   m_Father: {fileID: 2250673730279222166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 94, y: -261}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -94, y: -135.124}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6728451059894138703
 CanvasRenderer:
@@ -2758,8 +2758,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 256956361, guid: d14d17a3633d1482db5fba8e99a2b9f4, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 89261209e0fa7ad4fbde497c828cf838, type: 3}
+  m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4478,7 +4478,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &141868315946317543
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4495,7 +4495,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.29999924, y: -2.100006}
+  m_AnchoredPosition: {x: 0.30000305, y: -2.100006}
   m_SizeDelta: {x: -32.2231, y: -32.2231}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8933098572606791357
@@ -7261,6 +7261,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MoneyUI
       objectReference: {fileID: 0}
+    - target: {fileID: 5242974419702116445, guid: c47bfbc1bc43c41408a1358f859281ab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7654,6 +7658,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8379791167612546944}
     m_Modifications:
+    - target: {fileID: 4784488787732322978, guid: 2a7a3b42019aa48cbbac95d78ca36c28, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 54.69995
+      objectReference: {fileID: 0}
+    - target: {fileID: 4784488787732322978, guid: 2a7a3b42019aa48cbbac95d78ca36c28, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -84.400024
+      objectReference: {fileID: 0}
     - target: {fileID: 4784488788818181358, guid: 2a7a3b42019aa48cbbac95d78ca36c28, type: 3}
       propertyPath: m_Name
       value: MessageBox
