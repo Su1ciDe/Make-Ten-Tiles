@@ -12,6 +12,11 @@ namespace Obstacles
 		[field: SerializeField, ReadOnly, Group("Properties")] public Tile OtherAttachedTile { get; set; }
 		public override bool IsBlockingMovement { get; } = true;
 
+		[SerializeField] private Animator animator;
+
+		private static readonly int unzip = Animator.StringToHash("Unzip");
+		private const float UNZIP_DURATION = .5f;
+
 		public void Setup(Tile tile, Tile otherTile)
 		{
 			AttachedTile = tile;
@@ -36,10 +41,12 @@ namespace Obstacles
 
 		private async void GlueAnimation()
 		{
+			animator.SetTrigger(unzip);
+
 			AttachedTile.IsInDeck = true;
 			OtherAttachedTile.IsInDeck = true;
 
-			await UniTask.WaitForSeconds(1);
+			await UniTask.WaitForSeconds(UNZIP_DURATION);
 
 			DestroyObstacle();
 			AttachedTile.MoveTileToHolder();

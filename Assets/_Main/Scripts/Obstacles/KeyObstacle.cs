@@ -12,6 +12,7 @@ namespace Obstacles
 		public override bool IsBlockingMovement { get; } = false;
 
 		[SerializeField] private float unlockMoveDuration = 0.5f;
+		[SerializeField] private ParticleSystem keyParticle;
 
 		private void Awake()
 		{
@@ -28,6 +29,7 @@ namespace Obstacles
 			AttachedTile.OnTileRemoved -= OnTileRemoved;
 
 			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.RigidImpact);
+			keyParticle.gameObject.SetActive(true);
 
 			var cage = GridManager.Instance.FindObstacle<CageObstacle>();
 			if (cage)

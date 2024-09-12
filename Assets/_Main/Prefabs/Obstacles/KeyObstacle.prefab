@@ -250,6 +250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <AttachedTile>k__BackingField: {fileID: 0}
   unlockMoveDuration: 0.25
+  keyParticle: {fileID: 8698501525654383422}
 --- !u!1001 &6366724477186802941
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -302,6 +303,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: KeyTrail
       objectReference: {fileID: 0}
+    - target: {fileID: 8924232341338860738, guid: 83b810402bae04d5ba80293c72f1d869, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -310,5 +315,10 @@ PrefabInstance:
 --- !u!4 &7103220972046925541 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4235798156097829400, guid: 83b810402bae04d5ba80293c72f1d869, type: 3}
+  m_PrefabInstance: {fileID: 6366724477186802941}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &8698501525654383422 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2372393291096502211, guid: 83b810402bae04d5ba80293c72f1d869, type: 3}
   m_PrefabInstance: {fileID: 6366724477186802941}
   m_PrefabAsset: {fileID: 0}
