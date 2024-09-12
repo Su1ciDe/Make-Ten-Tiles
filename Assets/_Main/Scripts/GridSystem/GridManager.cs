@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -54,22 +55,31 @@ namespace GridSystem
 
 		private void OnEnable()
 		{
-			Tile.OnTappedToTile += OnTappedToTile;
+			Tile.OnTilePlaced += OnTilePlaced;
 		}
 
 		private void OnDisable()
 		{
-			Tile.OnTappedToTile -= OnTappedToTile;
+			Tile.OnTilePlaced -= OnTilePlaced;
 		}
 
-		private async void OnTappedToTile(Tile tile)
+		private void OnTilePlaced(Tile tile)
 		{
 			totalTileCount--;
+
+			if (checkWinCoroutine is not null)
+				StopCoroutine(checkWinCoroutine);
+
+			checkWinCoroutine = StartCoroutine(CheckWin());
+		}
+
+		private Coroutine checkWinCoroutine;
+
+		private IEnumerator CheckWin()
+		{
+			yield return new WaitForSeconds(0.5f);
 			if (totalTileCount <= 0)
-			{
-				await UniTask.WaitForSeconds(1);
 				LevelManager.Instance.Win();
-			}
 		}
 
 		#region Helpers

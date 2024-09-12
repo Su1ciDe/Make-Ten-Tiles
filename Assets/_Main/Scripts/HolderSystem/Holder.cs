@@ -68,7 +68,14 @@ namespace HolderSystem
 			}
 			else
 			{
-				if (!holderGroupPool.TryDequeue(out var newGroup)) return;
+				if (!holderGroupPool.TryDequeue(out var newGroup))
+				{
+					tile.IsInDeck = false;
+					tile.SetInteractable(true);
+					tile.HideHighlight();
+
+					return;
+				}
 
 				newGroup.gameObject.SetActive(true);
 				var tileCount = GetTotalTileCount();

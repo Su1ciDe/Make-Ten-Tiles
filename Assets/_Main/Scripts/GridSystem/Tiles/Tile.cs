@@ -97,14 +97,14 @@ namespace GridSystem.Tiles
 			// return transform.DOScale(1.3f, BLAST_DURATION).SetEase(Ease.OutSine);
 		}
 
-		private void Highlight()
+		public void Highlight()
 		{
 			transform.DOComplete();
 			transform.DOLocalMoveZ(HIGHLIGHT_POS, HIGHLIGHT_DURATION).SetRelative().SetEase(Ease.OutBack);
 			transform.DOScale(HIGHLIGHT_SCALE, HIGHLIGHT_DURATION).SetEase(Ease.OutBack);
 		}
 
-		private void HideHighlight()
+		public void HideHighlight()
 		{
 			transform.DOKill();
 			transform.DOLocalMoveZ(0, HIGHLIGHT_DURATION).SetEase(Ease.InBack);
@@ -186,23 +186,29 @@ namespace GridSystem.Tiles
 			}
 			else if (eventData.pointerEnter)
 			{
-				transform.DOKill();
+				if (IsInDeck)
+				{
+					CurrentTile = null;
+					return;
+				}
 
-				if (IsInDeck) return;
+				transform.DOKill();
 				if (Obstacle && Obstacle.IsBlockingMovement)
 				{
 					Obstacle.OnTapped();
+					CurrentTile = null;
+
 					return;
 				}
 
 				MoveTileToHolder();
-
-				CurrentTile = null;
 			}
 			else
 			{
 				HideHighlight();
 			}
+
+			CurrentTile = null;
 		}
 
 		public void SetInteractable(bool interactable)
