@@ -1,5 +1,7 @@
 using DG.Tweening;
+using Fiber.Managers;
 using GridSystem.Tiles;
+using Lofelt.NiceVibrations;
 using TriInspector;
 using UnityEngine;
 
@@ -42,9 +44,11 @@ namespace Obstacles
 
 		public override bool OnTapped()
 		{
+			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.Warning);
+
 			AttachedTile.SetInteractable(false);
 			AttachedTile.transform.DOKill();
-			AttachedTile.transform.DOShakeRotation(.25f, 5 * Vector3.up, 25, 2, false, ShakeRandomnessMode.Harmonic).SetEase(Ease.InQuart).OnComplete(() => AttachedTile.SetInteractable(true));
+			AttachedTile.transform.DOShakeRotation(.5f, 10 * Vector3.up, 10, 2, false, ShakeRandomnessMode.Harmonic).SetEase(Ease.InQuart).OnComplete(() => AttachedTile.SetInteractable(true));
 
 			return !IsBlockingMovement;
 		}

@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Fiber.Managers;
 using Fiber.Utilities;
 using Fiber.Utilities.Extensions;
+using GamePlay.Player;
 using GridSystem.Tiles;
 using Obstacles;
 using TriInspector;
@@ -46,6 +48,8 @@ namespace GridSystem
 		private void Start()
 		{
 			transform.position = new Vector3(transform.position.x, transform.position.y, GridCells.GetLength(0) * Tile.TILE_HEIGHT);
+			Player.Instance.CanInput = false;
+			transform.DOMoveX(15, .35f).From().SetEase(Ease.OutBack).OnComplete(() => Player.Instance.CanInput = true);
 		}
 
 		private void OnEnable()
@@ -220,7 +224,10 @@ namespace GridSystem
 							if (!gridCell) return;
 							if (gridCell.CurrentTile is null) continue;
 
-							SceneVisibilityManager.instance.DisablePicking(gridCell.CurrentTile.gameObject, true);
+							if (!Application.isPlaying)
+							{
+								SceneVisibilityManager.instance.DisablePicking(gridCell.CurrentTile.gameObject, true);
+							}
 						}
 					}
 				}
@@ -239,7 +246,7 @@ namespace GridSystem
 		}
 
 		[ValidateInput(nameof(ValidateRandomizerGrid))]
-		[Group("Randomizer")] [SerializeField] private Array2DCell[] randomGrid;
+		[Group("Randomizer")] [SerializeField] private Array2DCell[] randomGrids;
 		[ValidateInput(nameof(ValidateRandomizer))]
 		[Group("Randomizer")] [SerializeField] private Randomizer[] randomizer;
 
@@ -258,9 +265,9 @@ namespace GridSystem
 			sizes = new List<Vector2Int>();
 			gridCells = new GridCell3D();
 
-			for (int i = 0; i < randomGrid.Length; i++)
+			for (int i = 0; i < randomGrids.Length; i++)
 			{
-				sizes.Add(randomGrid[i].GridSize);
+				sizes.Add(randomGrids[i].GridSize);
 				var xOffset = (nodeSize.x * sizes[i].x + xSpacing * (sizes[i].x - 1)) / 2f - nodeSize.x / 2f;
 				var yOffset = (nodeSize.y * sizes[i].y + ySpacing * (sizes[i].y - 1)) / 2f - nodeSize.y / 2f;
 
@@ -279,7 +286,7 @@ namespace GridSystem
 						cell.gameObject.name = x + " - " + y;
 						gridCells[i, x, y] = cell;
 
-						if (randomGrid[i].GetCell(x, y) == CellType.Filled)
+						if (randomGrids[i].GetCell(x, y) == CellType.Filled)
 						{
 							var tileType = randomizer.WeightedRandom(randomWeights).Color;
 							cell.Setup(i, x, y, tileType);
@@ -357,7 +364,7 @@ namespace GridSystem
 		private bool CheckCanRandom()
 		{
 			var totalCount = 0;
-			foreach (var array2DCell in randomGrid)
+			foreach (var array2DCell in randomGrids)
 			{
 				for (int x = 0; x < array2DCell.GridSize.x; x++)
 				{
@@ -394,6 +401,9 @@ namespace GridSystem
 
 		public void SetupTileBlockers()
 		{
+			if (!Application.isPlaying)
+				ResetTileBlockers();
+
 			for (int layerIndex = 1; layerIndex < gridCells.GetLength(0); layerIndex++)
 			{
 				var tilesLayerUp = gridCells[layerIndex];
@@ -460,6 +470,22 @@ namespace GridSystem
 								cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile);
 							}
 						}
+					}
+				}
+			}
+		}
+
+		private void ResetTileBlockers()
+		{
+			for (int i = 0; i < gridCells.GetLength(0); i++)
+			{
+				for (int x = 0; x < gridCells[i].GetLength(0); x++)
+				{
+					for (int y = 0; y < gridCells[i].GetLength(1); y++)
+					{
+						var cell = gridCells[i, x, y];
+						if (cell.CurrentTile)
+							cell.CurrentTile.ResetBlockers();
 					}
 				}
 			}

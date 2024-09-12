@@ -1,5 +1,7 @@
 using DG.Tweening;
+using Fiber.AudioSystem;
 using Fiber.Managers;
+using Lofelt.NiceVibrations;
 using Obstacles;
 using TMPro;
 using TriInspector;
@@ -29,6 +31,7 @@ namespace GridSystem.Tiles
 		[SerializeField] private new Renderer renderer;
 		[SerializeField] private Collider col;
 		[SerializeField] private TextMeshPro txtAmount;
+		[SerializeField] private TrailRenderer trail;
 
 		public static float JUMP_DURATION = .5F;
 		private const float JUMP_POWER = 5;
@@ -59,14 +62,25 @@ namespace GridSystem.Tiles
 			txtAmount.SetText(((int)tileType).ToString());
 			CurrentCell = cell;
 			CurrentCell.CurrentTile = this;
+
+			SetupMaterials();
 		}
 
 		private void SetupMaterials()
 		{
-			var mats = renderer.materials;
+			var mat = GameManager.Instance.ColorsSO.Materials[Type];
+			var mats = Application.isPlaying ? renderer.materials : renderer.sharedMaterials;
 			for (var i = 0; i < mats.Length; i++)
-				mats[i] = GameManager.Instance.ColorsSO.Materials[Type];
-			renderer.materials = mats;
+				mats[i] = mat;
+			if (Application.isPlaying)
+				renderer.materials = mats;
+			else
+				renderer.sharedMaterials = mats;
+
+			trail.startColor = mat.color;
+			var endColor = mat.color;
+			endColor.a = 0;
+			trail.endColor = endColor;
 		}
 
 		public Tween Jump(Vector3 pos)
@@ -75,15 +89,16 @@ namespace GridSystem.Tiles
 			return transform.DOLocalJump(pos, transform.position.y / 2f + JUMP_POWER, 1, JUMP_DURATION);
 		}
 
-		public Tween Blast()
+		public void Blast()
 		{
-			transform.DOShakeRotation(BLAST_DURATION, 4 * Vector3.forward, 25, 2, false, ShakeRandomnessMode.Harmonic).SetEase(Ease.InQuart).OnComplete(() => Destroy(gameObject));
-			return transform.DOScale(1.3f, BLAST_DURATION).SetEase(Ease.OutSine);
+			Destroy(gameObject);
+			// transform.DOShakeRotation(BLAST_DURATION, 4 * Vector3.forward, 25, 2, false, ShakeRandomnessMode.Harmonic).SetEase(Ease.InQuart).OnComplete(() => Destroy(gameObject));
+			// return transform.DOScale(1.3f, BLAST_DURATION).SetEase(Ease.OutSine);
 		}
 
 		private void Highlight()
 		{
-			transform.DOKill();
+			transform.DOComplete();
 			transform.DOLocalMoveZ(HIGHLIGHT_POS, HIGHLIGHT_DURATION).SetRelative().SetEase(Ease.OutBack);
 			transform.DOScale(HIGHLIGHT_SCALE, HIGHLIGHT_DURATION).SetEase(Ease.OutBack);
 		}
@@ -105,6 +120,11 @@ namespace GridSystem.Tiles
 			{
 				downTile.AddBlockerCount();
 			}
+		}
+
+		public void ResetBlockers()
+		{
+			LayerBlockCount = 0;
 		}
 
 		private void OnBlockerRemoved(Tile blockerTile)
@@ -142,16 +162,22 @@ namespace GridSystem.Tiles
 
 		public void OnPointerDown(PointerEventData eventData)
 		{
+			if (IsInDeck) return;
+
 			CurrentTile = this;
 
 			if (!Obstacle)
 			{
 				Highlight();
+
+				HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.RigidImpact);
 			}
 		}
 
 		public void OnPointerUp(PointerEventData eventData)
 		{
+			if (IsInDeck) return;
+
 			if (!CurrentTile) return;
 			if (eventData.pointerEnter && !eventData.pointerEnter.Equals(CurrentTile.gameObject))
 			{
@@ -168,7 +194,7 @@ namespace GridSystem.Tiles
 					return;
 				}
 
-				RemoveTile();
+				MoveTileToHolder();
 
 				CurrentTile = null;
 			}
@@ -185,13 +211,22 @@ namespace GridSystem.Tiles
 
 		#endregion
 
-		public void RemoveTile()
+		public void MoveTileToHolder()
 		{
+			trail.emitting = true;
+
+			AudioManager.Instance.PlayAudio(AudioName.Pop1);
+
 			IsInDeck = true;
 			SetInteractable(false);
 
 			OnTappedToTile?.Invoke(this);
 			OnTileRemoved?.Invoke(this);
+		}
+
+		public void OnTilePlaced()
+		{
+			trail.emitting = false;
 		}
 
 #if UNITY_EDITOR

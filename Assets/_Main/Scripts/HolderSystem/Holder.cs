@@ -6,6 +6,7 @@ using Fiber.Utilities;
 using GridSystem;
 using GridSystem.Tiles;
 using UnityEngine;
+using Utilities;
 
 namespace HolderSystem
 {
@@ -23,11 +24,6 @@ namespace HolderSystem
 		private void Awake()
 		{
 			Setup();
-		}
-
-		private void Start()
-		{
-			// transform.position = new Vector3(transform.position.x, transform.position.y, -GridManager.Instance.GridCells.GetLength(0) * Tile.TILE_HEIGHT);
 		}
 
 		private void OnEnable()
@@ -98,15 +94,30 @@ namespace HolderSystem
 			tile.transform.SetParent(tenGroup.transform);
 			tile.Jump(1 * Vector3.up).OnComplete(() =>
 			{
-				tileInDeck.Blast();
-				tile.Blast().OnComplete(() =>
-				{
-					holderGroups.Remove(tenGroup);
-					holderGroupPool.Enqueue(tenGroup);
-					tenGroup.gameObject.SetActive(false);
-					RearrangeGroups();
-				});
+				tile.OnTilePlaced();
+				StartCoroutine(BlastCoroutine(tile, tileInDeck, tenGroup));
 			});
+		}
+
+		private IEnumerator BlastCoroutine(Tile tile, Tile tileInDeck, HolderGroup tenGroup)
+		{
+			var pos = (tile.transform.position + tileInDeck.transform.position) / 2f;
+			var mergeTile = ObjectPooler.Instance.Spawn("MergeTile", pos).GetComponent<MergeTile>();
+			mergeTile.Blast(tile.Type, tenGroup);
+			mergeTile.transform.DOMove(tileInDeck.transform.position, 0.25f).SetEase(Ease.Linear);
+
+			tileInDeck.Blast();
+			tile.Blast();
+
+			yield return waitBlast;
+
+			holderGroups.Remove(tenGroup);
+			holderGroupPool.Enqueue(tenGroup);
+			tenGroup.gameObject.SetActive(false);
+
+			yield return new WaitForSeconds(0.5f);
+
+			RearrangeGroups();
 		}
 
 		public void RearrangeGroups()

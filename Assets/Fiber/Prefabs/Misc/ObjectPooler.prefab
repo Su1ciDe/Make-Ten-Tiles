@@ -53,3 +53,7 @@ MonoBehaviour:
     Prefab: {fileID: 5570248883799033574, guid: db7ca50b4bc4c4389aa32c0016fa2c7a, type: 3}
     InitialSize: 10
     MaxSize: 50
+  - Tag: MergeTile
+    Prefab: {fileID: 6821949881093097151, guid: 58f040dede955422a8ac9c7a429ff48e, type: 3}
+    InitialSize: 10
+    MaxSize: 20
