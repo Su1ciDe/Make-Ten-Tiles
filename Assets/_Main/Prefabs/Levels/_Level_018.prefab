@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1366442058061317222}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.5, z: -2.25}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -98,7 +98,7 @@ Transform:
   m_GameObject: {fileID: 1422221751326952448}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1, z: -2.25}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -164,7 +164,7 @@ Transform:
   m_GameObject: {fileID: 2269124664626060927}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1.5, z: -2.25}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -223,7 +223,7 @@ Transform:
   m_GameObject: {fileID: 6971467181766366084}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -2.25}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -303,7 +303,7 @@ Transform:
   m_GameObject: {fileID: 6983800815770378193}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 3, z: -2.25}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -341,7 +341,7 @@ Transform:
   m_GameObject: {fileID: 7086884895496717543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 2.5, z: -2.25}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -386,7 +386,7 @@ Transform:
   m_GameObject: {fileID: 9127619957115311793}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 2, z: -2.25}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10929,6 +10929,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2214877173332427715, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2214877173332427715, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.000000044703484
+      objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: grid.Array.size
       value: 0
@@ -11163,27 +11171,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[0].Percentage
-      value: 25,00%
+      value: 25.00%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[1].Percentage
-      value: 25,00%
+      value: 25.00%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[2].Percentage
-      value: 12,50%
+      value: 12.50%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[3].Percentage
-      value: 12,50%
+      value: 12.50%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[4].Percentage
-      value: 12,50%
+      value: 12.50%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[5].Percentage
-      value: 12,50%
+      value: 12.50%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomGrids.Array.data[0].cellSize.x

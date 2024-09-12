@@ -23660,6 +23660,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2214877173332427715, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2214877173332427715, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.000000074505806
+      objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: grid.Array.size
       value: 0
@@ -23934,27 +23942,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[0].Percentage
-      value: 25,00%
+      value: 25.00%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[1].Percentage
-      value: 25,00%
+      value: 25.00%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[2].Percentage
-      value: 12,50%
+      value: 12.50%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[3].Percentage
-      value: 12,50%
+      value: 12.50%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[4].Percentage
-      value: 12,50%
+      value: 12.50%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomizer.Array.data[5].Percentage
-      value: 12,50%
+      value: 12.50%
       objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: randomGrids.Array.data[0].cellSize.x

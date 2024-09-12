@@ -46,7 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   randomizeAfterRotation: 1
   Levels:
-  - {fileID: 1888550177445521947, guid: 6a8bf3b26f16f254bac6e755445eee8d, type: 3}
   - {fileID: 1888550177445521947, guid: c55f22c250749114489d06bb9d3b9884, type: 3}
   - {fileID: 1888550177445521947, guid: 5a18825a9d90404479a68c9a06573d1e, type: 3}
   - {fileID: 1888550177445521947, guid: da370c25d79eec741acb7775822fbc86, type: 3}
