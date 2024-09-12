@@ -103,7 +103,9 @@ namespace HolderSystem
 		private IEnumerator BlastCoroutine(Tile tile, Tile tileInDeck, HolderGroup tenGroup)
 		{
 			var pos = (tile.transform.position + tileInDeck.transform.position) / 2f;
-			ObjectPooler.Instance.Spawn("MergeTile", pos).GetComponent<MergeTile>().Blast(tile.Type);
+			var mergeTile = ObjectPooler.Instance.Spawn("MergeTile", pos).GetComponent<MergeTile>();
+			mergeTile.Blast(tile.Type);
+			mergeTile.transform.DOMove(tileInDeck.transform.position, 0.25f).SetEase(Ease.Linear);
 
 			tileInDeck.Blast();
 			tile.Blast();

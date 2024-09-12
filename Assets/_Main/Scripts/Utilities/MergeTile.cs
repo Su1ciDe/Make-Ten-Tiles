@@ -59,9 +59,7 @@ namespace Utilities
 
 		private void ResetTile()
 		{
-			var color = txtTen.color;
-			color.a = 1;
-			txtTen.color = color;
+			txtTen.color = Color.white;
 			txtTen.transform.localPosition = textPosition;
 			txtTen.transform.localScale = Vector3.one;
 
