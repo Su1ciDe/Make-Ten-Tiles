@@ -31,6 +31,7 @@ namespace GridSystem.Tiles
 		[SerializeField] private new Renderer renderer;
 		[SerializeField] private Collider col;
 		[SerializeField] private TextMeshPro txtAmount;
+		[SerializeField] private TrailRenderer trail;
 
 		public static float JUMP_DURATION = .5F;
 		private const float JUMP_POWER = 5;
@@ -67,13 +68,19 @@ namespace GridSystem.Tiles
 
 		private void SetupMaterials()
 		{
+			var mat = GameManager.Instance.ColorsSO.Materials[Type];
 			var mats = Application.isPlaying ? renderer.materials : renderer.sharedMaterials;
 			for (var i = 0; i < mats.Length; i++)
-				mats[i] = GameManager.Instance.ColorsSO.Materials[Type];
+				mats[i] = mat;
 			if (Application.isPlaying)
 				renderer.materials = mats;
 			else
 				renderer.sharedMaterials = mats;
+
+			trail.startColor = mat.color;
+			var endColor = mat.color;
+			endColor.a = 0;
+			trail.endColor = endColor;
 		}
 
 		public Tween Jump(Vector3 pos)
@@ -206,6 +213,8 @@ namespace GridSystem.Tiles
 
 		public void MoveTileToHolder()
 		{
+			trail.emitting = true;
+
 			AudioManager.Instance.PlayAudio(AudioName.Pop1);
 
 			IsInDeck = true;
@@ -213,6 +222,11 @@ namespace GridSystem.Tiles
 
 			OnTappedToTile?.Invoke(this);
 			OnTileRemoved?.Invoke(this);
+		}
+
+		public void OnTilePlaced()
+		{
+			trail.emitting = false;
 		}
 
 #if UNITY_EDITOR

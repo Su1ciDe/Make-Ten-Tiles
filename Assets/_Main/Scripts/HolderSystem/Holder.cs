@@ -92,7 +92,11 @@ namespace HolderSystem
 			tileInDeck.IsCompleted = true;
 			tile.IsCompleted = true;
 			tile.transform.SetParent(tenGroup.transform);
-			tile.Jump(1 * Vector3.up).OnComplete(() => StartCoroutine(BlastCoroutine(tile, tileInDeck, tenGroup)));
+			tile.Jump(1 * Vector3.up).OnComplete(() =>
+			{
+				tile.OnTilePlaced();
+				StartCoroutine(BlastCoroutine(tile, tileInDeck, tenGroup));
+			});
 		}
 
 		private IEnumerator BlastCoroutine(Tile tile, Tile tileInDeck, HolderGroup tenGroup)
