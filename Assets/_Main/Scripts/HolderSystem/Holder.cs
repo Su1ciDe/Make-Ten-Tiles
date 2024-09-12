@@ -94,7 +94,7 @@ namespace HolderSystem
 			tile.transform.SetParent(tenGroup.transform);
 			tile.Jump(1 * Vector3.up).OnComplete(() =>
 			{
-				tile.OnTilePlaced();
+				tile.TilePlaced();
 				StartCoroutine(BlastCoroutine(tile, tileInDeck, tenGroup));
 			});
 		}

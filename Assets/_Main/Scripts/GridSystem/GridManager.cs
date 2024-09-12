@@ -172,7 +172,7 @@ namespace GridSystem
 
 				var layer = new GameObject("Layer_" + (i + 1)).transform;
 				layer.SetParent(cellHolder);
-				layer.localPosition = new Vector3(layer.localPosition.x, i * Tile.TILE_HEIGHT, layer.localPosition.z);
+				layer.localPosition = new Vector3(0, i * Tile.TILE_HEIGHT, 0);
 				for (int y = 0; y < sizes[i].y; y++)
 				{
 					for (int x = 0; x < sizes[i].x; x++)
@@ -275,7 +275,7 @@ namespace GridSystem
 
 				var layer = new GameObject("Layer_" + (i + 1)).transform;
 				layer.SetParent(cellHolder);
-				layer.localPosition = new Vector3(layer.localPosition.x, i * Tile.TILE_HEIGHT, layer.localPosition.z);
+				layer.localPosition = new Vector3(0, i * Tile.TILE_HEIGHT, 0);
 				for (int y = 0; y < sizes[i].y; y++)
 				{
 					for (int x = 0; x < sizes[i].x; x++)
