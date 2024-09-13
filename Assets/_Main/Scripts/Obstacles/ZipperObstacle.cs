@@ -13,9 +13,15 @@ namespace Obstacles
 		public override bool IsBlockingMovement { get; } = true;
 
 		[SerializeField] private Animator animator;
+		[SerializeField] private GameObject blocker;
 
 		private static readonly int unzip = Animator.StringToHash("Unzip");
 		private const float UNZIP_DURATION = .5f;
+
+		private void Start()
+		{
+			CheckForBlocker();
+		}
 
 		public void Setup(Tile tile, Tile otherTile)
 		{
@@ -26,6 +32,8 @@ namespace Obstacles
 
 			transform.position = (tile.transform.position + otherTile.transform.position) / 2f;
 			transform.rotation = Quaternion.LookRotation(otherTile.transform.position - tile.transform.position, Vector3.back);
+
+			CheckForBlocker();
 		}
 
 		public override bool OnTapped()
@@ -51,6 +59,19 @@ namespace Obstacles
 			DestroyObstacle();
 			AttachedTile.MoveTileToHolder();
 			OtherAttachedTile.MoveTileToHolder();
+		}
+
+		private void CheckForBlocker()
+		{
+			if (OtherAttachedTile.LayerBlockCount > 0 || AttachedTile.LayerBlockCount > 0)
+			{
+				SetBlocker(true);
+			}
+		}
+
+		public void SetBlocker(bool isBlocked)
+		{
+			blocker.SetActive(isBlocked);
 		}
 	}
 }

@@ -485,7 +485,6 @@ namespace GridSystem
 							else if (coverTwoTileY && IsInGrid(downLayerIndex, coverX, coverY + 1) && gridCells[downLayerIndex, coverX, coverY + 1] &&
 							         gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile)
 							{
-								Debug.Log("VAR");
 								cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile);
 							}
 						}

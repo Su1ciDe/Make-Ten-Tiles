@@ -1,6 +1,6 @@
 using DG.Tweening;
-using Fiber.AudioSystem;
 using Fiber.Managers;
+using Fiber.AudioSystem;
 using Lofelt.NiceVibrations;
 using Obstacles;
 using TMPro;
@@ -147,6 +147,9 @@ namespace GridSystem.Tiles
 			{
 				layerBlocker.SetActive(false);
 				SetInteractable(true);
+
+				if (Obstacle && Obstacle is ZipperObstacle zipper)
+					zipper.SetBlocker(false);
 			}
 		}
 
