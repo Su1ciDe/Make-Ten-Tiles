@@ -1,7 +1,6 @@
-using System.Collections;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Fiber.Managers;
 using Fiber.Utilities;
@@ -50,7 +49,7 @@ namespace GridSystem
 		{
 			transform.position = new Vector3(transform.position.x, transform.position.y, GridCells.GetLength(0) * Tile.TILE_HEIGHT);
 			Player.Instance.CanInput = false;
-			transform.DOMoveX(15, .35f).From().SetEase(Ease.OutBack).OnComplete(() => Player.Instance.CanInput = true);
+			transform.DOMoveX(15, .35f).From().SetEase(Ease.OutBack).OnComplete(() => LevelManager.Instance.StartLevel());
 		}
 
 		private void OnEnable()

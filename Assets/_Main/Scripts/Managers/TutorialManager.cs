@@ -5,6 +5,8 @@ using Fiber.Utilities;
 using GamePlay.Player;
 using GridSystem;
 using GridSystem.Tiles;
+using HolderSystem;
+using Obstacles;
 using UnityEngine;
 
 namespace Managers
@@ -12,6 +14,10 @@ namespace Managers
 	public class TutorialManager : MonoBehaviour
 	{
 		private TutorialUI tutorialUI => TutorialUI.Instance;
+
+		[SerializeField] private int iceObstacleTutorialLevel;
+		[SerializeField] private int cageObstacleTutorialLevel;
+		[SerializeField] private int zipperObstacleTutorialLevel;
 
 		private void OnEnable()
 		{
@@ -57,6 +63,7 @@ namespace Managers
 				tutorialUI.HideHand();
 				tutorialUI.HideText();
 				tutorialUI.HideFakeButton();
+				tutorialUI.HideTapToSkip();
 			}
 
 			Tile.OnTilePlaced -= OnTilePlacedLevel1_1;
@@ -76,6 +83,16 @@ namespace Managers
 			{
 				StartCoroutine(Level1Tutorial());
 			}
+
+			if (LevelManager.Instance.LevelNo.Equals(2))
+			{
+				Level2Tutorial();
+			}
+
+			if (LevelManager.Instance.LevelNo.Equals(iceObstacleTutorialLevel))
+			{
+				StartCoroutine(IceObstacleTutorial());
+			}
 		}
 
 		#region Level 1
@@ -84,7 +101,7 @@ namespace Managers
 		{
 			Player.Instance.CanInput = false;
 
-			yield return new WaitForSeconds(1);
+			yield return new WaitForSeconds(0.5f);
 
 			var selectedCell = GridManager.Instance.GridCells[0, 0, 0];
 			var pos = selectedCell.transform.position;
@@ -123,6 +140,66 @@ namespace Managers
 			tutorialUI.HideFakeButton();
 
 			Player.Instance.CanInput = true;
+		}
+
+		#endregion
+
+		#region Level 2
+
+		private int level2TileCount;
+
+		private void Level2Tutorial()
+		{
+			level2TileCount = 2;
+			Player.Instance.CanInput = false;
+
+			Tile.OnTilePlaced += OnTilePlacedLevel2;
+		}
+
+		private void OnTilePlacedLevel2(Tile tile)
+		{
+			level2TileCount--;
+
+			if (level2TileCount > 0) return;
+
+			Tile.OnTilePlaced -= OnTilePlacedLevel2;
+			Player.Instance.CanInput = false;
+
+			tutorialUI.ShowText("Don't let the holder get full!", new Vector3(0,-1600));
+			tutorialUI.ShowFocus(Holder.Instance.transform.position, Helper.MainCamera, false, 0, 2);
+			tutorialUI.ShowTapToSkip(Level2TutorialComplete, true, 1);
+		}
+
+		private void Level2TutorialComplete()
+		{
+			tutorialUI.HideText();
+			tutorialUI.HideFocus();
+
+			Player.Instance.CanInput = true;
+		}
+
+		#endregion
+
+		#region IceTutorial
+
+		private IEnumerator IceObstacleTutorial()
+		{
+			Player.Instance.CanInput = false;
+
+			yield return new WaitForSeconds(0.5f);
+
+			var iceObstacle = GridManager.Instance.FindObstacle<IceObstacle>();
+			var pos = iceObstacle.AttachedTile.transform.position;
+
+			tutorialUI.ShowFocus(pos, Helper.MainCamera);
+			tutorialUI.ShowText("Break the ICE by moving any 2 tiles!");
+			tutorialUI.ShowTapToSkip(IceObstacleTutorialComplete, true, 1);
+		}
+
+		private void IceObstacleTutorialComplete()
+		{
+			tutorialUI.HideFocus();
+			tutorialUI.HideText();
 		}
 
 		#endregion

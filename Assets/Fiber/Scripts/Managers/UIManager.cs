@@ -104,7 +104,7 @@ namespace Fiber.Managers
 		private void OnLevelLoad()
 		{
 			UpdateLevelText();
-			startPanel.Open();
+			// startPanel.Open();
 		}
 
 		private void OnLevelStart()

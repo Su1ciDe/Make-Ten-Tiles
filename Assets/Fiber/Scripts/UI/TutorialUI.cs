@@ -13,11 +13,15 @@ namespace Fiber.UI
 		[Space]
 		[SerializeField] private Button fakeButton;
 		[Space]
-		[SerializeField] private GameObject message;
+		[SerializeField] private RectTransform message;
 		[SerializeField] private TMP_Text messageText;
 		[Space]
 		[SerializeField] private Image focus;
 		[SerializeField] private Image blocker;
+		[Space]
+		[SerializeField] private GameObject tapToSkipPanel;
+		[SerializeField] private TMP_Text txtTapToSkip;
+		[SerializeField] private Button btnTapToSkip;
 
 		private Vector3 messagePosition;
 
@@ -31,6 +35,7 @@ namespace Fiber.UI
 		private void Awake()
 		{
 			messagePosition = message.transform.position;
+			btnTapToSkip.onClick.AddListener(TapToSkip);
 		}
 
 		private void OnDestroy()
@@ -116,7 +121,7 @@ namespace Fiber.UI
 		{
 			message.transform.DOComplete();
 			messageText.SetText(msg);
-			message.SetActive(true);
+			message.gameObject.SetActive(true);
 			if (isAnimated)
 			{
 				message.transform.DOScale(1.25f, .25f).SetEase(Ease.InOutCubic).SetLoops(-1, LoopType.Yoyo).OnKill(() => message.transform.localScale = Vector3.one).SetTarget(messageText)
@@ -130,8 +135,15 @@ namespace Fiber.UI
 		public void ShowText(string msg, Vector3 position, Camera cam = null, float showDuration = 0, bool isAnimated = false)
 		{
 			var pos = position;
-			if (cam) pos = cam.WorldToScreenPoint(position);
-			message.transform.position = pos;
+			if (cam)
+			{
+				pos = cam.WorldToScreenPoint(position);
+				message.transform.position = pos;
+			}
+			else
+			{
+				message.anchoredPosition = pos;
+			}
 
 			ShowText(msg, showDuration, isAnimated);
 		}
@@ -144,7 +156,7 @@ namespace Fiber.UI
 			message.transform.position = messagePosition;
 		}
 
-		public bool IsShowingText => message.activeSelf;
+		public bool IsShowingText => message.gameObject.activeSelf;
 
 		public void ShowFocus(Vector3 position, Camera cam = null, bool repeated = false, float delay = 0, float scale = 1)
 		{
@@ -202,6 +214,33 @@ namespace Fiber.UI
 		public void SetBlocker(bool block)
 		{
 			blocker.gameObject.SetActive(block);
+		}
+
+		public void ShowTapToSkip(UnityAction action, bool showText = true, float delay = 0)
+		{
+			tapToSkipPanel.SetActive(true);
+			btnTapToSkip.onClick.AddListener(action);
+			txtTapToSkip.gameObject.SetActive(false);
+			DOVirtual.DelayedCall(delay, () => txtTapToSkip.gameObject.SetActive(showText)).SetUpdate(true).SetTarget(tapToSkipPanel);
+		}
+
+		public void HideTapToSkip()
+		{
+			tapToSkipPanel.SetActive(false);
+			txtTapToSkip.gameObject.SetActive(false);
+		}
+
+		private void TapToSkip()
+		{
+			DOTween.Kill(tapToSkipPanel);
+
+			HideHand();
+			btnTapToSkip.onClick.RemoveAllListeners();
+			btnTapToSkip.onClick.AddListener(TapToSkip);
+
+			txtTapToSkip.transform.DOKill();
+			tapToSkipPanel.SetActive(false);
+			txtTapToSkip.gameObject.SetActive(false);
 		}
 	}
 }
