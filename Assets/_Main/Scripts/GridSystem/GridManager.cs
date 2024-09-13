@@ -421,41 +421,42 @@ namespace GridSystem
 				{
 					var tilesLayerDown = gridCells[downLayerIndex];
 					var normalizeDiffX = tilesLayerDown.GetLength(0) - tilesLayerUp.GetLength(0);
-					var coverTwoTileX = normalizeDiffX % 2 > 0;
+					var coverTwoTileX = Mathf.Abs(normalizeDiffX) % 2 == 1;
 					var normalizeDiffY = tilesLayerDown.GetLength(1) - tilesLayerUp.GetLength(1);
-					var coverTwoTileY = normalizeDiffY % 2 > 0;
+					var coverTwoTileY = Mathf.Abs(normalizeDiffY) % 2 == 1;
 
-					normalizeDiffX /= 2;
-					normalizeDiffY /= 2;
+					normalizeDiffX = Mathf.FloorToInt(normalizeDiffX / 2f);
+					normalizeDiffY = Mathf.FloorToInt(normalizeDiffY / 2f);
 
 					for (var x = 0; x < tilesLayerUp.GetLength(0); x++)
 					{
-						for (int y = 0; y < tilesLayerUp.GetLength(1); y++)
+						for (var y = 0; y < tilesLayerUp.GetLength(1); y++)
 						{
 							var cell = tilesLayerUp[x, y];
 							if (!cell.CurrentTile) continue;
 
-							var coverX = cell.Coordinates.x + normalizeDiffX;
-							var coverY = cell.Coordinates.y + normalizeDiffY;
+							var coverX = x + normalizeDiffX;
+							var coverY = y + normalizeDiffY;
 
-							if (coverX > tilesLayerDown.GetLength(0) || coverY > tilesLayerDown.GetLength(1)) continue;
-
-							if (coverX < tilesLayerDown.GetLength(0) && coverY < tilesLayerDown.GetLength(1))
+							if (coverX >= 0 && coverX < tilesLayerDown.GetLength(0) && coverY >= 0 && coverY < tilesLayerDown.GetLength(1))
 							{
-								if (gridCells[downLayerIndex, coverX, coverY] && gridCells[downLayerIndex, coverX, coverY].CurrentTile)
-									cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY].CurrentTile);
+								var coverCell = gridCells[downLayerIndex, coverX, coverY];
+								if (coverCell && coverCell.CurrentTile)
+									cell.CurrentTile.RegisterBlocker(coverCell.CurrentTile);
 							}
 							else // If the down layer's grid is smaller than the upper layer
 							{
 								if (coverX >= tilesLayerDown.GetLength(0))
 								{
-									if (gridCells[downLayerIndex, coverX - 1, coverY] && gridCells[downLayerIndex, coverX - 1, coverY].CurrentTile)
-										cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX - 1, coverY].CurrentTile);
+									var coverCell = gridCells[downLayerIndex, tilesLayerDown.GetLength(0) - 1, coverY];
+									if (coverCell && coverCell.CurrentTile)
+										cell.CurrentTile.RegisterBlocker(coverCell.CurrentTile);
 								}
 								else if (coverY >= tilesLayerDown.GetLength(1))
 								{
-									if (gridCells[downLayerIndex, coverX, coverY - 1] && gridCells[downLayerIndex, coverX, coverY - 1].CurrentTile)
-										cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY - 1].CurrentTile);
+									var coverCell = gridCells[downLayerIndex, coverX, tilesLayerDown.GetLength(1) - 1];
+									if (coverCell && coverCell.CurrentTile)
+										cell.CurrentTile.RegisterBlocker(coverCell.CurrentTile);
 								}
 							}
 
@@ -477,6 +478,7 @@ namespace GridSystem
 							else if (coverTwoTileY && IsInGrid(downLayerIndex, coverX, coverY + 1) && gridCells[downLayerIndex, coverX, coverY + 1] &&
 							         gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile)
 							{
+								Debug.Log("VAR");
 								cell.CurrentTile.RegisterBlocker(gridCells[downLayerIndex, coverX, coverY + 1].CurrentTile);
 							}
 						}
