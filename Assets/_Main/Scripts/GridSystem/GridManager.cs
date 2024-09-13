@@ -123,10 +123,10 @@ namespace GridSystem
 			return cellHolder.GetChild(layerIndex);
 		}
 
-		public T FindObstacle<T>(bool isReversed = true) where T : BaseObstacle
+		public T FindObstacle<T>(bool topToBottom = true) where T : BaseObstacle
 		{
 			T obstacle;
-			if (isReversed)
+			if (topToBottom)
 			{
 				for (int i = gridCells.GetLength(0) - 1; i >= 0; i--)
 				{

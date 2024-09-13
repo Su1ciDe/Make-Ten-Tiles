@@ -89,6 +89,11 @@ namespace Managers
 				Level2Tutorial();
 			}
 
+			if (LevelManager.Instance.LevelNo.Equals(zipperObstacleTutorialLevel))
+			{
+				StartCoroutine(ZipperObstacleTutorial());
+			}
+
 			if (LevelManager.Instance.LevelNo.Equals(iceObstacleTutorialLevel))
 			{
 				StartCoroutine(IceObstacleTutorial());
@@ -165,7 +170,7 @@ namespace Managers
 			Tile.OnTilePlaced -= OnTilePlacedLevel2;
 			Player.Instance.CanInput = false;
 
-			tutorialUI.ShowText("Don't let the holder get full!", new Vector3(0,-1600));
+			tutorialUI.ShowText("Don't let the holder get full!", new Vector3(0, -1600));
 			tutorialUI.ShowFocus(Holder.Instance.transform.position, Helper.MainCamera, false, 0, 2);
 			tutorialUI.ShowTapToSkip(Level2TutorialComplete, true, 1);
 		}
@@ -200,6 +205,41 @@ namespace Managers
 		{
 			tutorialUI.HideFocus();
 			tutorialUI.HideText();
+
+			Player.Instance.CanInput = true;
+		}
+
+		#endregion
+
+		#region ZipperTutorial
+
+		private IEnumerator ZipperObstacleTutorial()
+		{
+			Player.Instance.CanInput = false;
+
+			yield return new WaitForSeconds(0.5f);
+
+			var zipperObstacle = GridManager.Instance.FindObstacle<ZipperObstacle>();
+			var pos = zipperObstacle.AttachedTile.transform.position;
+
+			tutorialUI.ShowFocus(pos, Helper.MainCamera, false, 0, 1.2f);
+			tutorialUI.ShowText("Tiles attached with ZIPPER move together!");
+			tutorialUI.ShowTap(pos, Helper.MainCamera);
+			tutorialUI.SetupFakeButton(() => zipperObstacle.OnTapped(), pos, Helper.MainCamera);
+
+			Tile.OnTappedToTile += OnZipperTileTapped;
+		}
+
+		private void OnZipperTileTapped(Tile tile)
+		{
+			Tile.OnTappedToTile -= OnZipperTileTapped;
+
+			tutorialUI.HideFocus();
+			tutorialUI.HideText();
+			tutorialUI.HideHand();
+			tutorialUI.HideFakeButton();
+
+			Player.Instance.CanInput = true;
 		}
 
 		#endregion
