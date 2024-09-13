@@ -227,6 +227,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9c174614b034a7cb77c975352effe3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iceObstacleTutorialLevel: 16
+  cageObstacleTutorialLevel: 0
+  zipperObstacleTutorialLevel: 8
 --- !u!1 &361578269
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,11 +279,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &427531727 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7914625326510753048, guid: bbc57307e5c19443faf896e365444f75, type: 3}
-  m_PrefabInstance: {fileID: 7914625327191746665}
-  m_PrefabAsset: {fileID: 0}
 --- !u!108 &705507994 stripped
 Light:
   m_CorrespondingSourceObject: {fileID: 6371357353640660266, guid: 2ea69cf2f12e741899ccd8e4e560761d, type: 3}
@@ -338,22 +336,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7914625326510753053, guid: bbc57307e5c19443faf896e365444f75, type: 3}
   m_PrefabInstance: {fileID: 7914625327191746665}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &963194233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427531727}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c49b4cc203aa6414fae5c798d1d0e7d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EventMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_MaxRayIntersections: 0
 --- !u!1 &1007875147
 GameObject:
   m_ObjectHideFlags: 0
@@ -1250,10 +1232,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7914625326510753048, guid: bbc57307e5c19443faf896e365444f75, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 963194233}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bbc57307e5c19443faf896e365444f75, type: 3}
 --- !u!1001 &9193890929325665224
 PrefabInstance:

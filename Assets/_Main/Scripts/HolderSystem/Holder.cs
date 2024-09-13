@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Fiber.AudioSystem;
 using Fiber.Managers;
 using Fiber.Utilities;
 using GridSystem;
 using GridSystem.Tiles;
+using Lofelt.NiceVibrations;
 using UnityEngine;
 using Utilities;
 
@@ -117,6 +119,10 @@ namespace HolderSystem
 			tile.Blast();
 
 			yield return waitBlast;
+
+			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.SoftImpact);
+			AudioManager.Instance.PlayAudio(AudioName.Plop1);
+			ParticlePooler.Instance.Spawn("Blast", mergeTile.transform.position);
 
 			holderGroups.Remove(tenGroup);
 			holderGroupPool.Enqueue(tenGroup);

@@ -96,7 +96,7 @@ namespace Fiber.Managers
 			CurrentLevel.Load();
 			OnLevelLoad?.Invoke();
 
-			StartLevel();
+			// StartLevel();
 		}
 
 		public void StartLevel()

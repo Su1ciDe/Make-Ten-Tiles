@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotCount: 6
-  unlockLevel: 10
+  unlockLevel: 11
 --- !u!1001 &8605721633308259523
 PrefabInstance:
   m_ObjectHideFlags: 0

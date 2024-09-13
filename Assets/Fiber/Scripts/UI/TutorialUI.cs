@@ -13,10 +13,15 @@ namespace Fiber.UI
 		[Space]
 		[SerializeField] private Button fakeButton;
 		[Space]
+		[SerializeField] private RectTransform message;
 		[SerializeField] private TMP_Text messageText;
 		[Space]
 		[SerializeField] private Image focus;
 		[SerializeField] private Image blocker;
+		[Space]
+		[SerializeField] private GameObject tapToSkipPanel;
+		[SerializeField] private TMP_Text txtTapToSkip;
+		[SerializeField] private Button btnTapToSkip;
 
 		private Vector3 messagePosition;
 
@@ -29,13 +34,14 @@ namespace Fiber.UI
 
 		private void Awake()
 		{
-			messagePosition = messageText.transform.position;
+			messagePosition = message.transform.position;
+			btnTapToSkip.onClick.AddListener(TapToSkip);
 		}
 
 		private void OnDestroy()
 		{
 			hand.DOKill();
-			messageText.rectTransform.DOKill();
+			message.transform.DOKill();
 			focus.DOKill();
 		}
 
@@ -111,40 +117,46 @@ namespace Fiber.UI
 			hand.DOKill();
 		}
 
-		public void ShowText(string message, float showDuration = 0, bool isAnimated = false)
+		public void ShowText(string msg, float showDuration = 0, bool isAnimated = false)
 		{
-			messageText.DOComplete();
-			messageText.rectTransform.DOKill();
-			messageText.SetText(message);
-			messageText.gameObject.SetActive(true);
+			message.transform.DOComplete();
+			messageText.SetText(msg);
+			message.gameObject.SetActive(true);
 			if (isAnimated)
 			{
-				messageText.rectTransform.DOScale(1.25f, .25f).SetEase(Ease.InOutCubic).SetLoops(-1, LoopType.Yoyo).OnKill(() => messageText.rectTransform.localScale = Vector3.one)
-					.SetTarget(messageText).SetUpdate(true);
+				message.transform.DOScale(1.25f, .25f).SetEase(Ease.InOutCubic).SetLoops(-1, LoopType.Yoyo).OnKill(() => message.transform.localScale = Vector3.one).SetTarget(messageText)
+					.SetUpdate(true);
 			}
 
 			if (!showDuration.Equals(0))
 				DOVirtual.DelayedCall(showDuration, HideText).SetTarget(messageText).SetUpdate(true);
 		}
 
-		public void ShowText(string message, Vector3 position, Camera cam = null, float showDuration = 0, bool isAnimated = false)
+		public void ShowText(string msg, Vector3 position, Camera cam = null, float showDuration = 0, bool isAnimated = false)
 		{
 			var pos = position;
-			if (cam) pos = cam.WorldToScreenPoint(position);
-			messageText.transform.position = pos;
+			if (cam)
+			{
+				pos = cam.WorldToScreenPoint(position);
+				message.transform.position = pos;
+			}
+			else
+			{
+				message.anchoredPosition = pos;
+			}
 
-			ShowText(message, showDuration, isAnimated);
+			ShowText(msg, showDuration, isAnimated);
 		}
 
 		public void HideText()
 		{
-			messageText.rectTransform.DOKill();
-			messageText.gameObject.SetActive(false);
+			message.transform.DOKill();
+			message.gameObject.SetActive(false);
 
-			messageText.transform.position = messagePosition;
+			message.transform.position = messagePosition;
 		}
 
-		public bool IsShowingText => messageText.gameObject.activeSelf;
+		public bool IsShowingText => message.gameObject.activeSelf;
 
 		public void ShowFocus(Vector3 position, Camera cam = null, bool repeated = false, float delay = 0, float scale = 1)
 		{
@@ -202,6 +214,33 @@ namespace Fiber.UI
 		public void SetBlocker(bool block)
 		{
 			blocker.gameObject.SetActive(block);
+		}
+
+		public void ShowTapToSkip(UnityAction action, bool showText = true, float delay = 0)
+		{
+			tapToSkipPanel.SetActive(true);
+			btnTapToSkip.onClick.AddListener(action);
+			txtTapToSkip.gameObject.SetActive(false);
+			DOVirtual.DelayedCall(delay, () => txtTapToSkip.gameObject.SetActive(showText)).SetUpdate(true).SetTarget(tapToSkipPanel);
+		}
+
+		public void HideTapToSkip()
+		{
+			tapToSkipPanel.SetActive(false);
+			txtTapToSkip.gameObject.SetActive(false);
+		}
+
+		private void TapToSkip()
+		{
+			DOTween.Kill(tapToSkipPanel);
+
+			HideHand();
+			btnTapToSkip.onClick.RemoveAllListeners();
+			btnTapToSkip.onClick.AddListener(TapToSkip);
+
+			txtTapToSkip.transform.DOKill();
+			tapToSkipPanel.SetActive(false);
+			txtTapToSkip.gameObject.SetActive(false);
 		}
 	}
 }
