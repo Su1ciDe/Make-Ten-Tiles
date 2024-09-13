@@ -69,11 +69,11 @@ namespace Obstacles
 
 		public override async void DestroyObstacle()
 		{
+			Tile.OnTappedToTile -= OnAnyTileTapped;
 			AttachedTile.Obstacle = null;
 
 			await UniTask.WaitForSeconds(1.1f);
 
-			//TODO: Add some visual effects
 			base.DestroyObstacle();
 		}
 	}
