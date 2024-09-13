@@ -44,4 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5889f9e56323472cbf53d6787f717805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pools: []
+  pools:
+  - Tag: Blast
+    Prefab: {fileID: 7353369823886502960, guid: 4c254c723ccfb054db269e6a6f12ee9d, type: 3}
+    Size: 10
+    AutoDeactivate: 1

@@ -1,5 +1,4 @@
 using DG.Tweening;
-using Fiber.AudioSystem;
 using Fiber.Managers;
 using Fiber.Utilities;
 using GridSystem;
@@ -55,8 +54,6 @@ namespace Utilities
 			txtTen.transform.DOScale(1, .5f).SetEase(Ease.OutBack);
 			tileHolder.DOScale(0, .25f).SetDelay(ANIMATION_DURATION).SetEase(Ease.InCirc).OnComplete(() =>
 			{
-				AudioManager.Instance.PlayAudio(AudioName.Plop1);
-
 				tileHolder.gameObject.SetActive(false);
 				txtTen.color = mats[0].color;
 				txtTen.DOFade(0, 1).SetEase(Ease.OutCubic);

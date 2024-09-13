@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Fiber.Managers;
 using Fiber.AudioSystem;
+using Fiber.Utilities;
 using Lofelt.NiceVibrations;
 using Obstacles;
 using TMPro;
