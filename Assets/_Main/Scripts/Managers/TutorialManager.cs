@@ -197,7 +197,7 @@ namespace Managers
 			var pos = iceObstacle.AttachedTile.transform.position;
 
 			tutorialUI.ShowFocus(pos, Helper.MainCamera);
-			tutorialUI.ShowText("Break the ICE by moving any 2 tiles!");
+			tutorialUI.ShowText("Break the ICE by moving any 2 tiles!", Vector3.zero);
 			tutorialUI.ShowTapToSkip(IceObstacleTutorialComplete, true, 1);
 		}
 
@@ -223,7 +223,7 @@ namespace Managers
 			var pos = zipperObstacle.AttachedTile.transform.position;
 
 			tutorialUI.ShowFocus(pos, Helper.MainCamera, false, 0, 1.2f);
-			tutorialUI.ShowText("Tiles attached with ZIPPER move together!");
+			tutorialUI.ShowText("Tiles attached with ZIPPER move together!", Vector3.zero);
 			tutorialUI.ShowTap(pos, Helper.MainCamera);
 			tutorialUI.SetupFakeButton(() => zipperObstacle.OnTapped(), pos, Helper.MainCamera);
 

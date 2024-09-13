@@ -122,7 +122,7 @@ namespace HolderSystem
 
 			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.SoftImpact);
 			AudioManager.Instance.PlayAudio(AudioName.Plop1);
-			ParticlePooler.Instance.Spawn("Blast", mergeTile.transform.position);
+			// ParticlePooler.Instance.Spawn("Blast", mergeTile.transform.position);
 
 			holderGroups.Remove(tenGroup);
 			holderGroupPool.Enqueue(tenGroup);
