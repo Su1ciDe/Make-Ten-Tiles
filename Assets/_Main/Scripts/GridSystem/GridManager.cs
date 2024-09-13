@@ -200,6 +200,8 @@ namespace GridSystem
 			}
 
 			SetupTileBlockers();
+
+			transform.position = new Vector3(transform.position.x, transform.position.y, gridCells.GetLength(0) * Tile.TILE_HEIGHT);
 		}
 
 		[Button]
@@ -312,6 +314,8 @@ namespace GridSystem
 			TryToSolveRandom(randomWeights);
 
 			SetupTileBlockers();
+
+			transform.position = new Vector3(transform.position.x, transform.position.y, GridCells.GetLength(0) * Tile.TILE_HEIGHT);
 		}
 
 		private void TryToSolveRandom(int[] randomWeights)
@@ -394,7 +398,8 @@ namespace GridSystem
 			int totalCount = 0;
 			foreach (var r in randomizer)
 			{
-				totalCount += (int)r.Color;
+				if ((int)r.Color != 5)
+					totalCount += (int)r.Color;
 			}
 
 			return totalCount % 10 != 0 ? TriValidationResult.Error("Cannot be solved!") : TriValidationResult.Valid;
@@ -438,6 +443,8 @@ namespace GridSystem
 							var coverX = x + normalizeDiffX;
 							var coverY = y + normalizeDiffY;
 
+							if (coverX > tilesLayerDown.GetLength(0) || coverY > tilesLayerDown.GetLength(1)) continue;
+
 							if (coverX >= 0 && coverX < tilesLayerDown.GetLength(0) && coverY >= 0 && coverY < tilesLayerDown.GetLength(1))
 							{
 								var coverCell = gridCells[downLayerIndex, coverX, coverY];
@@ -446,13 +453,13 @@ namespace GridSystem
 							}
 							else // If the down layer's grid is smaller than the upper layer
 							{
-								if (coverX >= tilesLayerDown.GetLength(0))
+								if (coverX == tilesLayerDown.GetLength(0) && coverY >= 0 && IsInGrid(downLayerIndex, coverX - 1, coverY))
 								{
-									var coverCell = gridCells[downLayerIndex, tilesLayerDown.GetLength(0) - 1, coverY];
+									var coverCell = gridCells[downLayerIndex, coverX - 1, coverY];
 									if (coverCell && coverCell.CurrentTile)
 										cell.CurrentTile.RegisterBlocker(coverCell.CurrentTile);
 								}
-								else if (coverY >= tilesLayerDown.GetLength(1))
+								else if (coverY == tilesLayerDown.GetLength(1) && coverX >= 0 && IsInGrid(downLayerIndex, coverX, coverY - 1))
 								{
 									var coverCell = gridCells[downLayerIndex, coverX, tilesLayerDown.GetLength(1) - 1];
 									if (coverCell && coverCell.CurrentTile)
