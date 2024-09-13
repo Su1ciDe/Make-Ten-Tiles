@@ -3,6 +3,7 @@ using Fiber.Managers;
 using Fiber.Utilities;
 using Lofelt.NiceVibrations;
 using DG.Tweening;
+using Fiber.AudioSystem;
 using UnityEngine;
 using TMPro;
 
@@ -93,6 +94,7 @@ namespace Fiber.CurrencySystem
 							SetCurrencyText(Mathf.CeilToInt(Mathf.Lerp(tempCurrentCurrency, tempCurrency, i1 / (count - 1))));
 
 							ObjectPooler.Instance.Release(icon, currencyPoolName);
+							AudioManager.Instance.PlayAudio(AudioName.Coin);
 							HapticManager.Instance.PlayHaptic(.6f, 0);
 						});
 					});
