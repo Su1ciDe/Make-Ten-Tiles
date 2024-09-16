@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Fiber.Managers;
 using GridSystem.Tiles;
 using Lofelt.NiceVibrations;
@@ -38,7 +39,28 @@ namespace Obstacles
 
 		public override bool OnTapped()
 		{
-			if (OtherAttachedTile.LayerBlockCount > 0 || AttachedTile.LayerBlockCount > 0) return false;
+			if (AttachedTile.IsInDeck || OtherAttachedTile.IsInDeck) return false;
+			if (OtherAttachedTile.LayerBlockCount > 0 || AttachedTile.LayerBlockCount > 0)
+			{
+				var otherAttachedTileOffset = OtherAttachedTile.transform.position - transform.position;
+				var attachedTileOffset = AttachedTile.transform.position - transform.position;
+
+				this.DOComplete();
+
+				AttachedTile.SetInteractable(false);
+				OtherAttachedTile.SetInteractable(false);
+				DOTween.Punch(() => transform.position, x =>
+				{
+					transform.position = x;
+					OtherAttachedTile.transform.position = x + otherAttachedTileOffset;
+					AttachedTile.transform.position = x + attachedTileOffset;
+				}, 0.1f * new Vector2(Random.Range(0, 2) * 2 - 1, Random.Range(0, 2) * 2 - 1), 0.35f).SetTarget(this).OnComplete(() =>
+				{
+					AttachedTile.SetInteractable(true);
+					OtherAttachedTile.SetInteractable(true);
+				});
+				return false;
+			}
 
 			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.RigidImpact);
 
@@ -53,6 +75,8 @@ namespace Obstacles
 
 			AttachedTile.IsInDeck = true;
 			OtherAttachedTile.IsInDeck = true;
+			AttachedTile.SetInteractable(false);
+			OtherAttachedTile.SetInteractable(false);
 
 			await UniTask.WaitForSeconds(UNZIP_DURATION);
 

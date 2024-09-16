@@ -227,12 +227,12 @@ namespace Managers
 			tutorialUI.ShowTap(pos, Helper.MainCamera);
 			tutorialUI.SetupFakeButton(() => zipperObstacle.OnTapped(), pos, Helper.MainCamera);
 
-			Tile.OnTappedToTile += OnZipperTileTapped;
+			Tile.OnTilePlaced += OnZipperTileTapped;
 		}
 
 		private void OnZipperTileTapped(Tile tile)
 		{
-			Tile.OnTappedToTile -= OnZipperTileTapped;
+			Tile.OnTilePlaced -= OnZipperTileTapped;
 
 			tutorialUI.HideFocus();
 			tutorialUI.HideText();
