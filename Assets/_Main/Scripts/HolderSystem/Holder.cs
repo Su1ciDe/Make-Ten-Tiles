@@ -164,22 +164,6 @@ namespace HolderSystem
 			}
 		}
 
-		// private void OnBlast(HolderGroup holderGroup)
-		// {
-		// 	StartCoroutine(WaitBlast());
-		// 	return;
-		//
-		// 	IEnumerator WaitBlast()
-		// 	{
-		// 		yield return waitBlast;
-		//
-		// 		holderGroups.Remove(holderGroup);
-		// 		holderGroupPool.Enqueue(holderGroup);
-		// 		holderGroup.gameObject.SetActive(false);
-		// 		RearrangeGroups();
-		// 	}
-		// }
-
 		public HolderGroup FindTen(Tile tile)
 		{
 			for (int i = 0; i < holderGroups.Count; i++)
@@ -192,6 +176,11 @@ namespace HolderSystem
 			}
 
 			return null;
+		}
+
+		public bool CanTileMoveToHolder()
+		{
+			return holderGroupPool.TryPeek(out _);
 		}
 
 		public int GetTotalTileCount()

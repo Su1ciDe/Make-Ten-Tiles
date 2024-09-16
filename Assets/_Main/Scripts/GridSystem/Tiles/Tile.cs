@@ -2,6 +2,7 @@ using DG.Tweening;
 using Fiber.Managers;
 using Fiber.AudioSystem;
 using Fiber.Utilities;
+using HolderSystem;
 using Lofelt.NiceVibrations;
 using Obstacles;
 using TMPro;
@@ -215,6 +216,12 @@ namespace GridSystem.Tiles
 					Obstacle.OnTapped();
 					CurrentTile = null;
 
+					return;
+				}
+
+				if (!Holder.Instance.CanTileMoveToHolder())
+				{
+					CurrentTile = null;
 					return;
 				}
 

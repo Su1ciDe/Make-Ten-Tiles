@@ -67,7 +67,10 @@ namespace GridSystem
 			totalTileCount--;
 
 			if (checkWinCoroutine is not null)
+			{
 				StopCoroutine(checkWinCoroutine);
+				checkWinCoroutine = null;
+			}
 
 			checkWinCoroutine = StartCoroutine(CheckWin());
 		}
@@ -79,7 +82,7 @@ namespace GridSystem
 			yield return new WaitForSeconds(0.5f);
 
 			// if it's the last tile is an ice obstacle, lose the game
-			if (totalTileCount.Equals(1) && FindObstacle<IceObstacle>() is not null)
+			if (!CanBeSolved())
 				LevelManager.Instance.Lose();
 
 			if (totalTileCount <= 0)
@@ -159,6 +162,34 @@ namespace GridSystem
 
 				return null;
 			}
+		}
+
+		public bool CanBeSolved()
+		{
+			for (int i = gridCells.GetLength(0) - 1; i >= 0; i--)
+			{
+				for (int x = 0; x < gridCells[i].GetLength(0); x++)
+				{
+					for (int y = 0; y < gridCells[i].GetLength(1); y++)
+					{
+						var tile = gridCells[i, x, y].CurrentTile;
+						if (!tile || tile.LayerBlockCount > 0) continue;
+
+						if (tile.Obstacle && tile.Obstacle is ZipperObstacle or KeyObstacle)
+						{
+							return true;
+						}
+						else if (!tile.Obstacle)
+						{
+							return true;
+						}
+						else
+							return false;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		#endregion
