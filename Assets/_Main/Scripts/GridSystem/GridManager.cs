@@ -47,7 +47,7 @@ namespace GridSystem
 
 		private void Start()
 		{
-			transform.position = new Vector3(transform.position.x, transform.position.y, GridCells.GetLength(0) * Tile.TILE_HEIGHT);
+			transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 			Player.Instance.CanInput = false;
 			transform.DOMoveX(15, .35f).From().SetEase(Ease.OutBack).OnComplete(() => LevelManager.Instance.StartLevel());
 		}
@@ -82,11 +82,15 @@ namespace GridSystem
 			yield return new WaitForSeconds(0.5f);
 
 			// if it's the last tile is an ice obstacle, lose the game
-			if (!CanBeSolved())
-				LevelManager.Instance.Lose();
 
 			if (totalTileCount <= 0)
+			{
 				LevelManager.Instance.Win();
+				yield break;
+			}
+
+			if (!CanBeSolved())
+				LevelManager.Instance.Lose();
 		}
 
 		#region Helpers
@@ -236,7 +240,7 @@ namespace GridSystem
 
 			SetupTileBlockers();
 
-			transform.position = new Vector3(transform.position.x, transform.position.y, gridCells.GetLength(0) * Tile.TILE_HEIGHT);
+			transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 		}
 
 		[Button]

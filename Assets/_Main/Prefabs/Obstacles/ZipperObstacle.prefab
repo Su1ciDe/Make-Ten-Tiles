@@ -533,7 +533,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: eac98d67fb8edef438f0ec9dc365115b, type: 3}
       propertyPath: m_Name
-      value: Sm_Zip_1
+      value: Blocker
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: eac98d67fb8edef438f0ec9dc365115b, type: 3}
       propertyPath: m_IsActive

@@ -1,7 +1,6 @@
 using DG.Tweening;
 using Fiber.Managers;
 using Fiber.AudioSystem;
-using Fiber.Utilities;
 using HolderSystem;
 using Lofelt.NiceVibrations;
 using Obstacles;
@@ -36,7 +35,7 @@ namespace GridSystem.Tiles
 		[SerializeField] private TrailRenderer trail;
 
 		public static float JUMP_DURATION = .5F;
-		private const float JUMP_POWER = 5;
+		private const float JUMP_POWER = 2;
 		public static float BLAST_DURATION = .35F;
 
 		private const float HIGHLIGHT_DURATION = .15F;
@@ -89,7 +88,7 @@ namespace GridSystem.Tiles
 		public Tween Jump(Vector3 pos)
 		{
 			transform.localScale = Vector3.one;
-			return transform.DOLocalJump(pos, transform.position.y / 2f + JUMP_POWER, 1, JUMP_DURATION);
+			return transform.DOLocalJump(pos, JUMP_POWER, 1, JUMP_DURATION);
 		}
 
 		public void Blast()

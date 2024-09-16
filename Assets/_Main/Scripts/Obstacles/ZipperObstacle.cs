@@ -17,7 +17,7 @@ namespace Obstacles
 		[SerializeField] private GameObject blocker;
 
 		private static readonly int unzip = Animator.StringToHash("Unzip");
-		private const float UNZIP_DURATION = .5f;
+		private const float UNZIP_DURATION = .25f;
 
 		private void Start()
 		{
