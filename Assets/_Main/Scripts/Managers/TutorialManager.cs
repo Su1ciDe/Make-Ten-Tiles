@@ -68,6 +68,9 @@ namespace Managers
 
 			Tile.OnTilePlaced -= OnTilePlacedLevel1_1;
 			Tile.OnTilePlaced -= OnTilePlacedLevel1_2;
+			Tile.OnTilePlaced -= OnTilePlacedLevel1_3;
+			Tile.OnTilePlaced -= OnTilePlacedLevel1_4;
+			Tile.OnTappedToTile -= OnTileTappedLevel3;
 		}
 
 		private IEnumerator WaitLoadingScreen()
@@ -87,6 +90,11 @@ namespace Managers
 			if (LevelManager.Instance.LevelNo.Equals(2))
 			{
 				Level2Tutorial();
+			}
+
+			if (LevelManager.Instance.LevelNo.Equals(3))
+			{
+				Level3Tutorial();
 			}
 
 			if (LevelManager.Instance.LevelNo.Equals(zipperObstacleTutorialLevel))
@@ -110,8 +118,11 @@ namespace Managers
 		private IEnumerator Level1Tutorial()
 		{
 			Player.Instance.CanInput = false;
+			tutorialUI.SetBlocker(true);
+			
 
 			yield return new WaitForSeconds(0.5f);
+			Player.Instance.CanInput = false;
 
 			var selectedCell = GridManager.Instance.GridCells[0, 0, 0];
 			var pos = selectedCell.transform.position;
@@ -149,6 +160,41 @@ namespace Managers
 			tutorialUI.HideHand();
 			tutorialUI.HideFakeButton();
 
+			var selectedCell = GridManager.Instance.GridCells[0, 0, 2];
+			var pos = selectedCell.transform.position;
+			tutorialUI.ShowTap(pos, Helper.MainCamera);
+			tutorialUI.SetupFakeButton(() => selectedCell.CurrentTile.MoveTileToHolder(), pos, Helper.MainCamera);
+
+			Tile.OnTilePlaced += OnTilePlacedLevel1_3;
+		}
+
+		private void OnTilePlacedLevel1_3(Tile tile)
+		{
+			Tile.OnTilePlaced -= OnTilePlacedLevel1_3;
+
+			tutorialUI.HideText();
+			tutorialUI.HideFocus();
+			tutorialUI.HideHand();
+			tutorialUI.HideFakeButton();
+
+			var selectedCell = GridManager.Instance.GridCells[0, 2, 2];
+			var pos = selectedCell.transform.position;
+			tutorialUI.ShowTap(pos, Helper.MainCamera);
+			tutorialUI.SetupFakeButton(() => selectedCell.CurrentTile.MoveTileToHolder(), pos, Helper.MainCamera);
+
+			Tile.OnTilePlaced += OnTilePlacedLevel1_4;
+		}
+
+		private void OnTilePlacedLevel1_4(Tile tile)
+		{
+			Tile.OnTilePlaced -= OnTilePlacedLevel1_4;
+
+			tutorialUI.HideText();
+			tutorialUI.HideFocus();
+			tutorialUI.HideHand();
+			tutorialUI.HideFakeButton();
+			tutorialUI.SetBlocker(false);
+
 			Player.Instance.CanInput = true;
 		}
 
@@ -161,7 +207,6 @@ namespace Managers
 		private void Level2Tutorial()
 		{
 			level2TileCount = 2;
-			Player.Instance.CanInput = false;
 
 			Tile.OnTilePlaced += OnTilePlacedLevel2;
 		}
@@ -190,6 +235,34 @@ namespace Managers
 
 		#endregion
 
+		#region Level 3
+
+		private void Level3Tutorial()
+		{
+			Tile.OnTappedToTile += OnTileTappedLevel3;
+		}
+
+		private void OnTileTappedLevel3(Tile tile)
+		{
+			Tile.OnTappedToTile -= OnTileTappedLevel3;
+
+			Player.Instance.CanInput = false;
+
+			tutorialUI.ShowFocus(tile.transform.position, Helper.MainCamera);
+			tutorialUI.ShowText("To collect the tiles at the bottom, you need to clear the tiles above them first.", new Vector3(0, -1600));
+			tutorialUI.ShowTapToSkip(Level3TutorialComplete, true, 1);
+		}
+
+		private void Level3TutorialComplete()
+		{
+			tutorialUI.HideText();
+			tutorialUI.HideFocus();
+
+			Player.Instance.CanInput = true;
+		}
+
+		#endregion
+
 		#region IceTutorial
 
 		private IEnumerator IceObstacleTutorial()
@@ -204,7 +277,7 @@ namespace Managers
 			var pos = iceObstacle.AttachedTile.transform.position;
 
 			tutorialUI.ShowFocus(pos, Helper.MainCamera);
-			tutorialUI.ShowText("Break the ICE by moving any 2 tiles!", new Vector3(0, -1150));
+			tutorialUI.ShowText("Break the ICE by moving any 2 tiles!", new Vector3(0, -700));
 			tutorialUI.ShowTapToSkip(IceObstacleTutorialComplete, true, 1);
 		}
 
@@ -233,7 +306,7 @@ namespace Managers
 			var pos = zipperObstacle.AttachedTile.transform.position;
 
 			tutorialUI.ShowFocus(pos, Helper.MainCamera, false, 0, 1.2f);
-			tutorialUI.ShowText("Tiles attached with ZIPPER move together!", new Vector3(0, -1100));
+			tutorialUI.ShowText("Tiles attached with ZIPPER move together!", new Vector3(0, -1700));
 			tutorialUI.ShowTap(pos, Helper.MainCamera);
 			tutorialUI.SetupFakeButton(() => zipperObstacle.OnTapped(), pos, Helper.MainCamera);
 
@@ -268,7 +341,7 @@ namespace Managers
 			var keyObstacle = GridManager.Instance.FindObstacle<KeyObstacle>();
 
 			tutorialUI.ShowFocus(cageObstacle.transform.position, Helper.MainCamera);
-			tutorialUI.ShowText("Break the CAGE by collecting the KEY!", new Vector3(0, -1750));
+			tutorialUI.ShowText("Break the CAGE by collecting the KEY!", new Vector3(0, -2000));
 
 			yield return new WaitForSeconds(2);
 
