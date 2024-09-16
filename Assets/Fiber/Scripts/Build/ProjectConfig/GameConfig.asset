@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   companyName: Fiber Games
   productName: Make Ten Tiles
-  productIcon: {fileID: 2800000, guid: 0049bd813b4544af79cb4fe539f26a73, type: 3}
+  productIcon: {fileID: 2800000, guid: ea173b647ab3f4b4ab26a067f11f9609, type: 3}
   version: 0.1
   iOSBundleId: com.FiberGames.MakeTenTiles
   teamId: 9JRFGT2VDU
@@ -25,6 +25,6 @@ MonoBehaviour:
   facebookClientToken: a09b7d1c4f432f06612033d8c081c492
   gameId: 3d3a32e98d7aac32b53cfa870c0c0aa375ab3be257f6a3d7fb46d144b6fd9fd9
   gameSecret: 7a4f697c8e4db133b0b118631ed96470dd68c5b7a49ea4330c1a26b16db339c6
-  background: {fileID: 0}
-  loadingScreenLogo: {fileID: 0}
-  loadingScreenTitle: {fileID: 0}
+  background: {fileID: 21300000, guid: 98d7ac498c6b15c40bcdd308886c3eab, type: 3}
+  loadingScreenLogo: {fileID: 21300000, guid: ea173b647ab3f4b4ab26a067f11f9609, type: 3}
+  loadingScreenTitle: {fileID: 21300000, guid: e6ce344c17fdbf6418ec02d23b7ceabe, type: 3}
