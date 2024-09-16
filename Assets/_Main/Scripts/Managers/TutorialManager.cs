@@ -16,8 +16,8 @@ namespace Managers
 		private TutorialUI tutorialUI => TutorialUI.Instance;
 
 		[SerializeField] private int iceObstacleTutorialLevel;
-		[SerializeField] private int cageObstacleTutorialLevel;
 		[SerializeField] private int zipperObstacleTutorialLevel;
+		[SerializeField] private int cageObstacleTutorialLevel;
 
 		private void OnEnable()
 		{
@@ -97,6 +97,11 @@ namespace Managers
 			if (LevelManager.Instance.LevelNo.Equals(iceObstacleTutorialLevel))
 			{
 				StartCoroutine(IceObstacleTutorial());
+			}
+
+			if (LevelManager.Instance.LevelNo.Equals(cageObstacleTutorialLevel))
+			{
+				StartCoroutine(CageTutorial());
 			}
 		}
 
@@ -189,6 +194,8 @@ namespace Managers
 
 		private IEnumerator IceObstacleTutorial()
 		{
+			tutorialUI.SetBlocker(true);
+
 			Player.Instance.CanInput = false;
 
 			yield return new WaitForSeconds(0.5f);
@@ -207,6 +214,7 @@ namespace Managers
 			tutorialUI.HideText();
 
 			Player.Instance.CanInput = true;
+			tutorialUI.SetBlocker(false);
 		}
 
 		#endregion
@@ -215,6 +223,8 @@ namespace Managers
 
 		private IEnumerator ZipperObstacleTutorial()
 		{
+			tutorialUI.SetBlocker(true);
+
 			Player.Instance.CanInput = false;
 
 			yield return new WaitForSeconds(0.5f);
@@ -240,6 +250,47 @@ namespace Managers
 			tutorialUI.HideFakeButton();
 
 			Player.Instance.CanInput = true;
+			tutorialUI.SetBlocker(false);
+		}
+
+		#endregion
+
+		#region CageTutorial
+
+		private IEnumerator CageTutorial()
+		{
+			tutorialUI.SetBlocker(true);
+			yield return new WaitForSeconds(0.5f);
+
+			Player.Instance.CanInput = false;
+
+			var cageObstacle = GridManager.Instance.FindObstacle<CageObstacle>();
+			var keyObstacle = GridManager.Instance.FindObstacle<KeyObstacle>();
+
+			tutorialUI.ShowFocus(cageObstacle.transform.position, Helper.MainCamera);
+			tutorialUI.ShowText("Break the CAGE by collecting the KEY!", new Vector3(0, -1750));
+
+			yield return new WaitForSeconds(2);
+
+			tutorialUI.HideFocus();
+			tutorialUI.ShowFocus(keyObstacle.transform.position, Helper.MainCamera);
+			tutorialUI.ShowTap(keyObstacle.transform.position, Helper.MainCamera);
+			tutorialUI.SetupFakeButton(() =>
+			{
+				keyObstacle.AttachedTile.MoveTileToHolder();
+				OnKeyObstacleTapped();
+			}, keyObstacle.transform.position, Helper.MainCamera);
+		}
+
+		private void OnKeyObstacleTapped()
+		{
+			tutorialUI.HideFocus();
+			tutorialUI.HideText();
+			tutorialUI.HideHand();
+			tutorialUI.HideFakeButton();
+
+			Player.Instance.CanInput = true;
+			tutorialUI.SetBlocker(false);
 		}
 
 		#endregion
