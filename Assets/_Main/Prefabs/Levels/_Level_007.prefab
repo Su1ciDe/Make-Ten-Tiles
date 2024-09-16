@@ -6899,10 +6899,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2214877173332427715, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 3240947888734713495, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
       propertyPath: grid.Array.size
       value: 0
