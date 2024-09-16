@@ -77,6 +77,11 @@ namespace GridSystem
 		private IEnumerator CheckWin()
 		{
 			yield return new WaitForSeconds(0.5f);
+
+			// if it's the last tile is an ice obstacle, lose the game
+			if (totalTileCount.Equals(1) && FindObstacle<IceObstacle>() is not null)
+				LevelManager.Instance.Lose();
+
 			if (totalTileCount <= 0)
 				LevelManager.Instance.Win();
 		}

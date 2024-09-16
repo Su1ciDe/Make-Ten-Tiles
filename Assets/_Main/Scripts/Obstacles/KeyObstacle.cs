@@ -13,10 +13,16 @@ namespace Obstacles
 
 		[SerializeField] private float unlockMoveDuration = 0.5f;
 		[SerializeField] private ParticleSystem keyParticle;
+		[SerializeField] private GameObject blocker;
 
 		private void Awake()
 		{
 			AttachedTile.OnTileRemoved += OnTileRemoved;
+		}
+
+		private void Start()
+		{
+			CheckForBlocker();
 		}
 
 		private void OnDestroy()
@@ -46,6 +52,19 @@ namespace Obstacles
 		public override bool OnTapped()
 		{
 			return !IsBlockingMovement;
+		}
+
+		private void CheckForBlocker()
+		{
+			if (AttachedTile.LayerBlockCount > 0)
+			{
+				SetBlocker(true);
+			}
+		}
+
+		public void SetBlocker(bool isBlocked)
+		{
+			blocker.SetActive(isBlocked);
 		}
 	}
 }

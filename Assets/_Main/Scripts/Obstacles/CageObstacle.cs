@@ -11,6 +11,13 @@ namespace Obstacles
 
 		[SerializeField] private float unlockMoveDuration = 0.25f;
 
+		[SerializeField] private GameObject blocker;
+
+		private void Start()
+		{
+			CheckForBlocker();
+		}
+
 		public override bool OnTapped()
 		{
 			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.Warning);
@@ -25,6 +32,19 @@ namespace Obstacles
 		public void Unlock(KeyObstacle key)
 		{
 			transform.DOScale(0, unlockMoveDuration).SetEase(Ease.InBack).OnComplete(DestroyObstacle);
+		}
+
+		private void CheckForBlocker()
+		{
+			if (AttachedTile.LayerBlockCount > 0)
+			{
+				SetBlocker(true);
+			}
+		}
+
+		public void SetBlocker(bool isBlocked)
+		{
+			blocker.SetActive(isBlocked);
 		}
 	}
 }

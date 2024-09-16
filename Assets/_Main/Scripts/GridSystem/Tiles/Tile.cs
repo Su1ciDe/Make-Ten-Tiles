@@ -149,8 +149,21 @@ namespace GridSystem.Tiles
 				layerBlocker.SetActive(false);
 				SetInteractable(true);
 
-				if (Obstacle && Obstacle is ZipperObstacle zipper)
-					zipper.SetBlocker(false);
+				if (Obstacle)
+				{
+					if (Obstacle is ZipperObstacle zipper)
+					{
+						zipper.SetBlocker(false);
+					}
+					else if (Obstacle is CageObstacle cage)
+					{
+						cage.SetBlocker(false);
+					}
+					else if (Obstacle is KeyObstacle key)
+					{
+						key.SetBlocker(false);
+					}
+				}
 			}
 		}
 
