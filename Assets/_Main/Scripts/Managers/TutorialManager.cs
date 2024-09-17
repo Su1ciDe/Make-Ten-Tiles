@@ -89,7 +89,7 @@ namespace Managers
 
 			if (LevelManager.Instance.LevelNo.Equals(2))
 			{
-				Level2Tutorial();
+				StartCoroutine(Level2Tutorial());
 			}
 
 			if (LevelManager.Instance.LevelNo.Equals(3))
@@ -119,7 +119,6 @@ namespace Managers
 		{
 			Player.Instance.CanInput = false;
 			tutorialUI.SetBlocker(true);
-			
 
 			yield return new WaitForSeconds(0.5f);
 			Player.Instance.CanInput = false;
@@ -202,23 +201,26 @@ namespace Managers
 
 		#region Level 2
 
-		private int level2TileCount;
-
-		private void Level2Tutorial()
+		private IEnumerator Level2Tutorial()
 		{
-			level2TileCount = 2;
+			tutorialUI.SetBlocker(true);
+			Player.Instance.CanInput = false;
+
+			yield return new WaitForSeconds(0.5f);
+
+			var selectedCell = GridManager.Instance.GridCells[0, 0, 0];
+			var pos = selectedCell.transform.position;
+			tutorialUI.ShowTap(pos, Helper.MainCamera);
+			tutorialUI.SetupFakeButton(() => selectedCell.CurrentTile.MoveTileToHolder(), pos, Helper.MainCamera);
 
 			Tile.OnTilePlaced += OnTilePlacedLevel2;
 		}
 
 		private void OnTilePlacedLevel2(Tile tile)
 		{
-			level2TileCount--;
-
-			if (level2TileCount > 0) return;
-
 			Tile.OnTilePlaced -= OnTilePlacedLevel2;
-			Player.Instance.CanInput = false;
+			
+			tutorialUI.HideHand();
 
 			tutorialUI.ShowText("Don't let the holder get full!", new Vector3(0, -1600));
 			tutorialUI.ShowFocus(Holder.Instance.transform.position, Helper.MainCamera, false, 0, 2);
@@ -230,6 +232,7 @@ namespace Managers
 			tutorialUI.HideText();
 			tutorialUI.HideFocus();
 
+			tutorialUI.SetBlocker(false);
 			Player.Instance.CanInput = true;
 		}
 

@@ -221,12 +221,17 @@ namespace Fiber.UI
 			tapToSkipPanel.SetActive(true);
 			btnTapToSkip.onClick.AddListener(action);
 			txtTapToSkip.gameObject.SetActive(false);
-			DOVirtual.DelayedCall(delay, () => txtTapToSkip.gameObject.SetActive(showText)).SetUpdate(true).SetTarget(tapToSkipPanel);
+			DOVirtual.DelayedCall(delay, () =>
+			{
+				btnTapToSkip.gameObject.SetActive(true);
+				txtTapToSkip.gameObject.SetActive(showText);
+			}).SetUpdate(true).SetTarget(tapToSkipPanel);
 		}
 
 		public void HideTapToSkip()
 		{
 			tapToSkipPanel.SetActive(false);
+			btnTapToSkip.gameObject.SetActive(false);
 			txtTapToSkip.gameObject.SetActive(false);
 		}
 
