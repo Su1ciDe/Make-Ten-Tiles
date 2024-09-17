@@ -8,6 +8,7 @@ namespace Obstacles
 	public class CageObstacle : BaseObstacle
 	{
 		public override bool IsBlockingMovement { get; } = true;
+		public  bool IsUnlocked { get; set; }
 
 		[SerializeField] private float unlockMoveDuration = 0.25f;
 

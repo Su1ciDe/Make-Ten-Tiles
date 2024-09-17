@@ -79,9 +79,7 @@ namespace GridSystem
 
 		private IEnumerator CheckWin()
 		{
-			yield return new WaitForSeconds(0.5f);
-
-			// if it's the last tile is an ice obstacle, lose the game
+			yield return new WaitForSeconds(1f);
 
 			if (totalTileCount <= 0)
 			{
@@ -89,6 +87,7 @@ namespace GridSystem
 				yield break;
 			}
 
+			// if it's the last tile is an ice obstacle, lose the game
 			if (!CanBeSolved())
 				LevelManager.Instance.Lose();
 		}
@@ -162,7 +161,10 @@ namespace GridSystem
 				for (int x = 0; x < gridCells[i].GetLength(0); x++)
 					for (int y = 0; y < gridCells[i].GetLength(1); y++)
 						if (gridCells[i, x, y].CurrentTile && gridCells[i, x, y].CurrentTile.Obstacle && gridCells[i, x, y].CurrentTile.Obstacle is TO obs)
-							return obs;
+							if (obs is CageObstacle { IsUnlocked: false })
+								return obs;
+							else if (obs is not CageObstacle)
+								return obs;
 
 				return null;
 			}
@@ -179,16 +181,14 @@ namespace GridSystem
 						var tile = gridCells[i, x, y].CurrentTile;
 						if (!tile || tile.LayerBlockCount > 0) continue;
 
-						if (tile.Obstacle && tile.Obstacle is ZipperObstacle or KeyObstacle)
+						if (!tile.Obstacle)
 						{
 							return true;
 						}
-						else if (!tile.Obstacle)
+						else if (tile.Obstacle && tile.Obstacle is ZipperObstacle or KeyObstacle)
 						{
 							return true;
 						}
-						else
-							return false;
 					}
 				}
 			}

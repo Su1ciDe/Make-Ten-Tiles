@@ -38,15 +38,15 @@ namespace Obstacles
 			keyParticle.gameObject.SetActive(true);
 
 			var cage = GridManager.Instance.FindObstacle<CageObstacle>();
-			if (cage)
+			if (!cage) return;
+
+			cage.IsUnlocked = true;
+			transform.SetParent(LevelManager.Instance.CurrentLevel.transform);
+			transform.DOMove(cage.transform.position, unlockMoveDuration).SetEase(Ease.InOutQuart).OnComplete(() =>
 			{
-				transform.SetParent(LevelManager.Instance.CurrentLevel.transform);
-				transform.DOMove(cage.transform.position, unlockMoveDuration).SetEase(Ease.InOutQuart).OnComplete(() =>
-				{
-					cage.Unlock(this);
-					DestroyObstacle();
-				});
-			}
+				cage.Unlock(this);
+				DestroyObstacle();
+			});
 		}
 
 		public override bool OnTapped()
