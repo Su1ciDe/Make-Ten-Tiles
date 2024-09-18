@@ -219,7 +219,7 @@ namespace Managers
 		private void OnTilePlacedLevel2(Tile tile)
 		{
 			Tile.OnTilePlaced -= OnTilePlacedLevel2;
-			
+
 			tutorialUI.HideHand();
 
 			tutorialUI.ShowText("Don't let the holder get full!", new Vector3(0, -1600));
@@ -271,7 +271,6 @@ namespace Managers
 		private IEnumerator IceObstacleTutorial()
 		{
 			tutorialUI.SetBlocker(true);
-
 			Player.Instance.CanInput = false;
 
 			yield return new WaitForSeconds(0.5f);
@@ -281,13 +280,40 @@ namespace Managers
 
 			tutorialUI.ShowFocus(pos, Helper.MainCamera);
 			tutorialUI.ShowText("Break the ICE by moving any 2 tiles!", new Vector3(0, -700));
-			tutorialUI.ShowTapToSkip(IceObstacleTutorialComplete, true, 1);
+
+			yield return new WaitForSeconds(2);
+
+			var tile = GridManager.Instance.GridCells[3, 1, 1].CurrentTile;
+			tutorialUI.ShowTap(tile.transform.position, Helper.MainCamera);
+			tutorialUI.SetupFakeButton(() =>
+			{
+				tile.MoveTileToHolder();
+				TileTapped1IceObstacleTutorial();
+			}, tile.transform.position, Helper.MainCamera);
+		}
+
+		private void TileTapped1IceObstacleTutorial()
+		{
+			tutorialUI.HideFocus();
+			tutorialUI.HideHand();
+			tutorialUI.HideFakeButton();
+
+			var tile = GridManager.Instance.GridCells[3, 3, 1].CurrentTile;
+
+			tutorialUI.ShowTap(tile.transform.position, Helper.MainCamera);
+			tutorialUI.SetupFakeButton(() =>
+			{
+				tile.MoveTileToHolder();
+				IceObstacleTutorialComplete();
+			}, tile.transform.position, Helper.MainCamera);
 		}
 
 		private void IceObstacleTutorialComplete()
 		{
 			tutorialUI.HideFocus();
 			tutorialUI.HideText();
+			tutorialUI.HideHand();
+			tutorialUI.HideFakeButton();
 
 			Player.Instance.CanInput = true;
 			tutorialUI.SetBlocker(false);
