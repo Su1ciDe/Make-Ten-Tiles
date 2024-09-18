@@ -201,14 +201,17 @@ namespace Fiber.UI
 			fakeButton.transform.position = position;
 			fakeButton.gameObject.SetActive(true);
 			fakeButton.onClick.AddListener(action);
-			fakeButton.onClick.AddListener(() => OnFakeButtonClicked?.Invoke());
+			fakeButton.onClick.AddListener(() =>
+			{
+				OnFakeButtonClicked?.Invoke();
+				HideFakeButton();
+			});
 		}
 
 		public void HideFakeButton()
 		{
 			fakeButton.onClick.RemoveAllListeners();
 			fakeButton.gameObject.SetActive(false);
-			SetBlocker(false);
 		}
 
 		public void SetBlocker(bool block)
