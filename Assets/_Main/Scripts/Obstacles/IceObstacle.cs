@@ -52,7 +52,11 @@ namespace Obstacles
 				var fracture = fractures[i];
 				fracture.isKinematic = false;
 				fracture.AddExplosionForce(explosionForce, transform.position, explosionRadius);
-				fracture.transform.DOScale(0, .5f).SetDelay(0.5f).OnComplete(() => fracture.gameObject.SetActive(false));
+				fracture.transform.DOScale(0.1f, .5f).SetDelay(0.5f).OnComplete(() =>
+				{
+					fracture.isKinematic = true;
+					fracture.gameObject.SetActive(false);
+				});
 			}
 		}
 

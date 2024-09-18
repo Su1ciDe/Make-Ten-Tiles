@@ -79,7 +79,7 @@ namespace GridSystem
 
 		private IEnumerator CheckWin()
 		{
-			yield return new WaitForSeconds(1f);
+			yield return new WaitForSeconds(1.5f);
 
 			if (totalTileCount <= 0)
 			{
@@ -179,15 +179,16 @@ namespace GridSystem
 					for (int y = 0; y < gridCells[i].GetLength(1); y++)
 					{
 						var tile = gridCells[i, x, y].CurrentTile;
-						if (!tile || tile.LayerBlockCount > 0) continue;
-
-						if (!tile.Obstacle)
+						if (tile && !tile.IsInDeck && tile.LayerBlockCount <= 0)
 						{
-							return true;
-						}
-						else if (tile.Obstacle && tile.Obstacle is ZipperObstacle or KeyObstacle)
-						{
-							return true;
+							if (!tile.Obstacle)
+							{
+								return true;
+							}
+							else if (tile.Obstacle && tile.Obstacle is ZipperObstacle or KeyObstacle)
+							{
+								return true;
+							}
 						}
 					}
 				}
