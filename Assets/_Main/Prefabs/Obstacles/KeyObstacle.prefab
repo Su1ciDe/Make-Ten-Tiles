@@ -283,7 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <AttachedTile>k__BackingField: {fileID: 0}
-  unlockMoveDuration: 0.35
+  unlockMoveDuration: 0.5
   keyParticle: {fileID: 1184118794164243327}
   blocker: {fileID: 6221714470440443606}
 --- !u!1001 &6527564728264270727
