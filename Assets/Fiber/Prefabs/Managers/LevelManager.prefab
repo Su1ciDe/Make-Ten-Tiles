@@ -46,11 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   randomizeAfterRotation: 1
   Levels:
-  - {fileID: 1888550177445521947, guid: da370c25d79eec741acb7775822fbc86, type: 3}
-  - {fileID: 1888550177445521947, guid: dd3ceaa7ae2c64d22b8e160c58242398, type: 3}
-  - {fileID: 1888550177445521947, guid: 8043e27fa8e67d54b9cdd0445cb65b02, type: 3}
+  - {fileID: 1888550177445521947, guid: 2f0e10e0bc744b54abd451d4be8a9927, type: 3}
+  - {fileID: 1888550177445521947, guid: 8191ecce6b4ffa64cad0edc6471dbc5e, type: 3}
+  - {fileID: 1888550177445521947, guid: 8dfaecfdd72b655478e1cce616423fc4, type: 3}
+  - {fileID: 1888550177445521947, guid: 0ca9a6240ddf15f41ac05de0e811d93c, type: 3}
   - {fileID: 1888550177445521947, guid: 7b8d1950521680e4ea0be1f034f88337, type: 3}
-  - {fileID: 1888550177445521947, guid: f74ae8b2b499241458e4fc1fbb4ee58a, type: 3}
+  - {fileID: 1888550177445521947, guid: ef247d3eeff429e40bdb682a5f5d3a65, type: 3}
   - {fileID: 1888550177445521947, guid: bab89c432a62dec489ef291e5ff916f6, type: 3}
   - {fileID: 1888550177445521947, guid: e7945b8ffae55aa4a98c04e34e70a7c5, type: 3}
   - {fileID: 1888550177445521947, guid: 2bb1953ebf0ef1044b7df9318f42e6de, type: 3}
@@ -79,4 +80,3 @@ MonoBehaviour:
   TutorialLevels:
   - {fileID: 1888550177445521947, guid: 6a8bf3b26f16f254bac6e755445eee8d, type: 3}
   - {fileID: 1888550177445521947, guid: 099b3579116ac424997791d19e8c4a85, type: 3}
-  - {fileID: 1888550177445521947, guid: c55f22c250749114489d06bb9d3b9884, type: 3}
