@@ -223,6 +223,7 @@ namespace Fiber.UI
 		{
 			tapToSkipPanel.SetActive(true);
 			btnTapToSkip.onClick.AddListener(action);
+			btnTapToSkip.gameObject.SetActive(false);
 			txtTapToSkip.gameObject.SetActive(false);
 			DOVirtual.DelayedCall(delay, () =>
 			{

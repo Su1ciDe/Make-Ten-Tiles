@@ -66,10 +66,6 @@ namespace Managers
 				tutorialUI.HideTapToSkip();
 			}
 
-			Tile.OnTilePlaced -= OnTilePlacedLevel1_1;
-			Tile.OnTilePlaced -= OnTilePlacedLevel1_2;
-			Tile.OnTilePlaced -= OnTilePlacedLevel1_3;
-			Tile.OnTilePlaced -= OnTilePlacedLevel1_4;
 			Tile.OnTappedToTile -= OnTileTappedLevel3;
 		}
 
@@ -129,15 +125,15 @@ namespace Managers
 			tutorialUI.ShowText("Tap two tiles that add up to 10 to clear!");
 			tutorialUI.ShowFocus(pos, Helper.MainCamera);
 			tutorialUI.ShowTap(pos, Helper.MainCamera);
-			tutorialUI.SetupFakeButton(() => selectedCell.CurrentTile.MoveTileToHolder(), pos, Helper.MainCamera);
-
-			Tile.OnTilePlaced += OnTilePlacedLevel1_1;
+			tutorialUI.SetupFakeButton(() =>
+			{
+				OnTilePlacedLevel1_1();
+				selectedCell.CurrentTile.MoveTileToHolder();
+			}, pos, Helper.MainCamera);
 		}
 
-		private void OnTilePlacedLevel1_1(Tile tile)
+		private void OnTilePlacedLevel1_1()
 		{
-			Tile.OnTilePlaced -= OnTilePlacedLevel1_1;
-
 			tutorialUI.HideFocus();
 			tutorialUI.HideHand();
 			tutorialUI.HideFakeButton();
@@ -145,15 +141,15 @@ namespace Managers
 			var selectedCell = GridManager.Instance.GridCells[0, 2, 0];
 			var pos = selectedCell.transform.position;
 			tutorialUI.ShowTap(pos, Helper.MainCamera);
-			tutorialUI.SetupFakeButton(() => selectedCell.CurrentTile.MoveTileToHolder(), pos, Helper.MainCamera);
-
-			Tile.OnTilePlaced += OnTilePlacedLevel1_2;
+			tutorialUI.SetupFakeButton(() =>
+			{
+				OnTilePlacedLevel1_2();
+				selectedCell.CurrentTile.MoveTileToHolder();
+			}, pos, Helper.MainCamera);
 		}
 
-		private void OnTilePlacedLevel1_2(Tile tile)
+		private void OnTilePlacedLevel1_2()
 		{
-			Tile.OnTilePlaced -= OnTilePlacedLevel1_2;
-
 			tutorialUI.HideText();
 			tutorialUI.HideFocus();
 			tutorialUI.HideHand();
@@ -162,15 +158,15 @@ namespace Managers
 			var selectedCell = GridManager.Instance.GridCells[0, 0, 2];
 			var pos = selectedCell.transform.position;
 			tutorialUI.ShowTap(pos, Helper.MainCamera);
-			tutorialUI.SetupFakeButton(() => selectedCell.CurrentTile.MoveTileToHolder(), pos, Helper.MainCamera);
-
-			Tile.OnTilePlaced += OnTilePlacedLevel1_3;
+			tutorialUI.SetupFakeButton(() =>
+			{
+				OnTilePlacedLevel1_3();
+				selectedCell.CurrentTile.MoveTileToHolder();
+			}, pos, Helper.MainCamera);
 		}
 
-		private void OnTilePlacedLevel1_3(Tile tile)
+		private void OnTilePlacedLevel1_3()
 		{
-			Tile.OnTilePlaced -= OnTilePlacedLevel1_3;
-
 			tutorialUI.HideText();
 			tutorialUI.HideFocus();
 			tutorialUI.HideHand();
@@ -179,15 +175,15 @@ namespace Managers
 			var selectedCell = GridManager.Instance.GridCells[0, 2, 2];
 			var pos = selectedCell.transform.position;
 			tutorialUI.ShowTap(pos, Helper.MainCamera);
-			tutorialUI.SetupFakeButton(() => selectedCell.CurrentTile.MoveTileToHolder(), pos, Helper.MainCamera);
-
-			Tile.OnTilePlaced += OnTilePlacedLevel1_4;
+			tutorialUI.SetupFakeButton(() =>
+			{
+				OnTilePlacedLevel1_4();
+				selectedCell.CurrentTile.MoveTileToHolder();
+			}, pos, Helper.MainCamera);
 		}
 
-		private void OnTilePlacedLevel1_4(Tile tile)
+		private void OnTilePlacedLevel1_4()
 		{
-			Tile.OnTilePlaced -= OnTilePlacedLevel1_4;
-
 			tutorialUI.HideText();
 			tutorialUI.HideFocus();
 			tutorialUI.HideHand();
@@ -224,7 +220,7 @@ namespace Managers
 
 			tutorialUI.ShowText("Don't let the holder get full!", new Vector3(0, -1600));
 			tutorialUI.ShowFocus(Holder.Instance.transform.position, Helper.MainCamera, false, 0, 2);
-			tutorialUI.ShowTapToSkip(Level2TutorialComplete, true, 1);
+			tutorialUI.ShowTapToSkip(Level2TutorialComplete, true, 2);
 		}
 
 		private void Level2TutorialComplete()
@@ -253,7 +249,7 @@ namespace Managers
 
 			tutorialUI.ShowFocus(tile.transform.position, Helper.MainCamera);
 			tutorialUI.ShowText("To collect the tiles at the bottom, you need to clear the tiles above them first.", new Vector3(0, -1600));
-			tutorialUI.ShowTapToSkip(Level3TutorialComplete, true, 1);
+			tutorialUI.ShowTapToSkip(Level3TutorialComplete, true, 2);
 		}
 
 		private void Level3TutorialComplete()

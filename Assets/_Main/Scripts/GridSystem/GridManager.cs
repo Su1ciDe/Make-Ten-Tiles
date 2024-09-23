@@ -55,11 +55,22 @@ namespace GridSystem
 		private void OnEnable()
 		{
 			Tile.OnTilePlaced += OnTilePlaced;
+			Tile.OnTappedToTile += OnTileTapped;
 		}
 
 		private void OnDisable()
 		{
 			Tile.OnTilePlaced -= OnTilePlaced;
+			Tile.OnTappedToTile -= OnTileTapped;
+		}
+
+		private void OnTileTapped(Tile tile)
+		{
+			if (checkWinCoroutine is not null)
+			{
+				StopCoroutine(checkWinCoroutine);
+				checkWinCoroutine = null;
+			}
 		}
 
 		private void OnTilePlaced(Tile tile)
