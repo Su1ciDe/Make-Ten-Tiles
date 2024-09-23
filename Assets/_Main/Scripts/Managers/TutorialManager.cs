@@ -88,7 +88,7 @@ namespace Managers
 				StartCoroutine(Level2Tutorial());
 			}
 
-			if (LevelManager.Instance.LevelNo.Equals(3))
+			if (LevelManager.Instance.LevelNo.Equals(4))
 			{
 				Level3Tutorial();
 			}
